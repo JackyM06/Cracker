@@ -1,0 +1,127 @@
+@import './variables';
+
+
+*{
+    outline: none;
+    box-sizing: border-box;
+}
+html{
+    font-size: 16px;
+}
+h1,p{
+    margin: 0;
+}
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    background: #f1f1f1;
+    -webkit-font-smoothing:antialiased;
+}
+a{
+    color: #999;
+}
+.icon{
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+
+@each $colorKey,$color in $colors {
+    .text-#{$colorKey}{
+        color: $color;
+    }
+    .bg-#{$colorKey}{
+        background-color: $color;
+    }
+};
+
+//text 
+@each $var in (left,center,right) {
+    .text-#{$var}{
+        text-align: $var!important;
+    }
+}
+
+
+//循环定义对应的字体大小工具类
+@each $Key,$var in $font-sizes {
+    .fs-#{$Key}{
+        font-size:$var*$base-font-size ;
+    }  
+}
+.text-ellipsis{
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+
+//flex布局
+.d-flex{
+    display: flex;
+}
+
+.flex-column{
+    flex-direction: column;
+}
+
+
+@each $Key,$var in $jc{
+    .jc-#{$Key}{
+        justify-content: $var;
+    }
+}
+@each $Key,$var in $ai{
+    .ai-#{$Key}{
+        align-items: $var;
+    }
+}
+
+.flex-1{
+    flex: 1;
+}
+.flex-wrap{
+    flex-wrap: wrap;
+}
+
+.w-100{
+    width: 100vw;
+}
+.h-100{
+    height: 100vh;
+}
+// 遍历形成边距工具类 
+@each $typeKey,$type in $space-type {
+    @each $sizeKey,$size in $space-sizes {
+        //m-1 => margin:0.25rem
+        .#{$typeKey}-#{$sizeKey}{
+            #{$type}:$size*$space-base-size;
+        }
+        // mx-1 => margin-left:0.25rem;margin-right:0.25rem
+        .#{$typeKey}x-#{$sizeKey}{
+            #{$type}-left:$size*$space-base-size;
+            #{$type}-right:$size*$space-base-size;
+        }
+        .#{$typeKey}y-#{$sizeKey}{
+            #{$type}-top:$size*$space-base-size;
+            #{$type}-bottom:$size*$space-base-size;
+        }
+    }
+    // .mt-1 => margin-top:0.25rem
+    @each $direKey,$dire in $space-direction {
+        @each $sizeKey,$size in $space-sizes {
+            .#{$typeKey}#{$direKey}-#{$sizeKey}{
+                #{$type}-#{$dire}:$size*$space-base-size;
+            }
+        }
+    }
+};
+
+.box-s{
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
+}
+
