@@ -2,7 +2,7 @@
     <div>
         <el-backtop target=".el-menu-demo"></el-backtop>
         <el-menu
-          :default-active="'1'"
+          :default-active="'/main/'"
           style="position:sticky;top:0px;border-bottom:none; padding:0 12%;z-index:999"
           class="el-menu-demo box-s" 
           mode="horizontal"
@@ -15,7 +15,7 @@
           <el-submenu index="2">
             <template slot="title">用户管理</template>
             <el-menu-item  index="/main/article">文章管理</el-menu-item>
-            <el-menu-item index="2-2">账号管理</el-menu-item>
+            <el-menu-item index="/main/user">账号管理</el-menu-item>
           </el-submenu>
           <el-submenu index="3">
               <template slot="title">内容管理</template>
@@ -30,7 +30,7 @@
               <el-menu-item index="4-3"><i class="el-icon-turn-off"></i> 退出</el-menu-item>
           </el-submenu>
         </el-menu>
-        <router-view class="" style="padding:1rem 12%;height:90vh;overflow-y:scroll;" :key="$route.path"></router-view>
+        <router-view class="" style="padding:1rem 12%;height:90.6vh;overflow-y:scroll;" :key="$route.path"></router-view>
         
     </div>
 </template>
