@@ -19,8 +19,23 @@ Vue.component('mavonEditor',mavonEditor)
 import dayjs from 'dayjs'
 Vue.mixin({
   filters:{
-    data(e){
-        return dayjs(e).format('YY/MM/DD HH:mm')
+    date(e,createdAt,format='YY/MM/DD HH:mm'){
+        if(createdAt){
+          const minute = -parseInt(dayjs(e).diff(dayjs(),'minute')) //获取时间差
+          if(e == createdAt){
+            return "从未更新"
+          }else if(minute < 5){
+            return "刚刚"
+          }else if (minute <30){
+            return minute+'分钟前'
+          }
+        }
+        return dayjs(e).format(format)
+    }
+  },
+  computed: {
+    uploadURL(){
+      return this.$http.defaults.baseURL+'/upload'
     }
   }
 })

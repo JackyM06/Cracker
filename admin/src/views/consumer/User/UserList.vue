@@ -1,34 +1,56 @@
 <template>
     <div class="articleGurid" ref="conent">
         <el-table
-        :data="model"
-        stripe
+        :data="model" @sort-change="sortChange" 
+        stripe 
         style="width: 100%">
-            <el-table-column label="序号" type="index" :index="(current-1)*pageSize+1" width="80px" style-name="text-align:center"></el-table-column>
-            <el-table-column label="用户id" prop="title" width="200px">
+            <el-table-column label="序号" type="index" :index="(current-1)*pageSize+1" width="50px" style-name="text-align:center"></el-table-column>
+            <el-table-column label="用户ID" prop="name">
               <template slot-scope="scope">
-                <span :slot="scope" style="width:100%" class="text-ellipsis">{{scope.row.title}}</span>
+                <span :slot="scope" style="width:100%" class="text-ellipsis">{{scope.row.name}}</span>
               </template>
             </el-table-column>
-            <el-table-column label="粉丝量" prop="visits"></el-table-column>
-            <el-table-column label="文章数" prop="address"></el-table-column>
-            <el-table-column label="评论数" prop="address"></el-table-column>
-            <el-table-column label="加入日期" prop="createdAt" width="120px"></el-table-column>
-            <el-table-column align="right" fixed="right"  width="150px">
+            <el-table-column sortable="custom"  label="文章数" width="100px"  prop="articles_size">
+              <template slot-scope="scope">
+                <span :slot="scope">{{scope.row.articles_size}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column sortable="custom"  label="粉丝量" width="100px"  prop="fans_size">
+              <template slot-scope="scope">
+                <span :slot="scope">{{scope.row.fans_size}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column sortable="custom"  label="关注数" width="100px"  prop="followers_size">
+              <template slot-scope="scope">
+                <span :slot="scope">{{scope.row.followers_size}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column sortable="custom" label="加入日期" prop="createdAt" width="120px">
+              <template slot-scope="scope">
+                <span :slot="scope">{{scope.row.createdAt | date}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right"  width="150px">
               <template slot="header" slot-scope="scope">
-                <el-input :slot="scope" v-model="search" size="mini" placeholder="输入关键字搜索"/>
+                <el-input :slot="scope" v-model="search"
+                @keyup.enter.native = "fetchList(1)"
+                 size="mini" placeholder="搜索用户"/>
               </template>
               <template slot-scope="scope">
-                <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
-                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">封号</el-button>
+                <el-button size="mini" 
+                @click="$router.push(`/main/user/${scope.row._id}`)">查看</el-button>
+                <el-button size="mini" type="danger" 
+                @click="handleDelete(scope.$index,scope.row._id)">删除</el-button>
               </template>
             </el-table-column>
         </el-table>
         <el-pagination
-        class="d-flex jc-center pt-1"
+        class="d-flex jc-center pt-1" 
         background
-        @current-change="fetchArticleList"
-        layout="prev, pager, next"
+        @size-change="handleSizeChange" :page-sizes="[10, 20, 30, 40]"
+        :page-size="pageSize"  
+        @current-change="fetchList" :current-page="current"
+        layout="sizes,prev, pager, next,jumper"
         :page-count="total">
         </el-pagination>
         <back-top ref="backtop" target=".articleGurid"></back-top>
@@ -37,49 +59,114 @@
 
 <script>
   import BackTop from 'components/content/BackTop/BackTop.vue'
-  import dayjs from 'dayjs'
     export default {
+      name:'ArticleList',
       data() {
       return {
-        current:0,
-        pageSize:0,
+        current:1,
+        pageSize:20,
         total:0,
         model:[],
-        search:""
+        search:"",
+        sort:{},
+        scrollTop:0,
+      }
+    },
+    computed:{
+      /**
+       * 排序规则及分页信息
+       */
+      params(){
+        return {
+          params:{
+            current:this.current,
+            pageSize:this.pageSize,
+            sort:this.sort,
+            query:{name:this.search}
+          }
+        }
       }
     },
     components:{
-      BackTop
+      BackTop,
     },
     methods: {
-      handleEdit(index, row) {
-        console.log(index, row);
-      },
-      handleDelete(index, row) {
-        console.log(index, row);
-      },
-      async fetchArticleList(index){
-        const res = await this.$http.get(`userlist/${index}`)
-        res.data.list.map(e => {
-            e.createdAt = dayjs(e.createdAt).format('YY/MM/DD HH:mm')
+      /**
+       * 删除文章数据
+       */
+      async handleDelete(index,id) {
+         this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then( async () => {
+          const res = await this.$http.delete(`rest/users/${id}`)
+          if(res.data.success){
+            this.model.splice(index,1)
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            })
+          }else{
+            this.$message({
+              type: 'error',
+              message: '网络出错!'
+            })
+          }
         })
+      },
+      /**
+       * 获取文章数据（按照约定好的分页和页序和排序规则）
+       */
+      async fetchList(index){
+        this.current = index || this.current
+        const res = 
+        await this.$http.get("rest/users/page",this.params)
         this.model = res.data.list
-        this.current = res.data.page.current
         this.total = res.data.page.total
-        this.pageSize = res.data.page.pageSize
-        if(this.$refs.conent) console.log(this.$refs.conent.scrollTop = 0)
-      }
+        if(this.$refs.conent) this.$refs.conent.scrollTop = 0
+        this.$notify({
+            title: '数据加载完成',
+            type: 'success',
+            duration:1000,
+            message: `成功获取${this.model.length}条数据！`
+        });
+      },
+      /**
+       * 改变分页大小，重新获取数据
+       */
+      handleSizeChange(size){
+        this.pageSize = size
+        this.fetchList()
+      },
+      /**
+       * 排序发生改变时修改排序规则，向后端重新获取数据
+       */
+      sortChange({prop,order}){ 
+        if(order == null){
+          this.sort = {}
+        }else if(order.match(new RegExp('asc'))){
+          this.sort = {[prop]:1}
+        }else if(order.match(new RegExp('desc'))){
+          this.sort = {[prop]:-1}
+        }
+        this.fetchList()
+      },
+
+
     },
     created(){
-      this.fetchArticleList(1)
+      this.fetchList()
+    },
+    beforeRouteLeave(to, from, next){
+      this.scrollTop = this.$refs.conent.scrollTop
+      next()
+    },
+    activated(){
+      this.$refs.conent.scrollTop=this.scrollTop
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  .search{
-    border-radius: 4px;
-    border: 1px solid #f1f1f1;
-    height: 30px;
-  }
 </style>

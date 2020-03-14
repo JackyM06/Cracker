@@ -1,7 +1,7 @@
 <template>
     <div class="articleGurid" ref="conent">
         <el-table
-        :data="model" @sort-change="sortChange" sortable="custom"
+        :data="model" @sort-change="sortChange" 
         stripe 
         style="width: 100%">
             <el-table-column label="序号" type="index" :index="(current-1)*pageSize+1" width="50px" style-name="text-align:center"></el-table-column>
@@ -10,17 +10,27 @@
                 <span :slot="scope" style="width:100%" class="text-ellipsis">{{scope.row.title}}</span>
               </template>
             </el-table-column>
-            <el-table-column sortable label="访问量" width="100px" prop="visits"></el-table-column>
+            <el-table-column sortable="custom"  label="访问量" width="100px"  prop="visits"></el-table-column>
             <el-table-column label="作者" prop="author">
               <template slot-scope="scope">
                 <span :slot="scope" style="width:100%" class="text-ellipsis">{{scope.row.author.name}}</span>
               </template>
             </el-table-column>
-            <el-table-column sortable label="创建日期" prop="createdAt" width="120px"></el-table-column>
-            <el-table-column sortable label="更新日期" prop="updatedAt" width="120px"></el-table-column>
-            <el-table-column align="right" fixed="right"  width="150px">
+            <el-table-column sortable="custom" label="创建日期" prop="createdAt" width="120px">
+              <template slot-scope="scope">
+                <span :slot="scope">{{scope.row.createdAt | date}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column sortable="custom" label="更新日期" prop="updatedAt" width="120px">
+              <template slot-scope="scope">
+                <span :slot="scope">{{scope.row.updatedAt | date(scope.row.createdAt)}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right"  width="150px">
               <template slot="header" slot-scope="scope">
-                <el-input :slot="scope" v-model="search" size="mini" placeholder="输入关键字搜索"/>
+                <el-input :slot="scope" v-model="search"
+                @keyup.enter.native = "fetchList(1)"
+                 size="mini" placeholder="搜索文章"/>
               </template>
               <template slot-scope="scope">
                 <el-button size="mini" 
@@ -31,10 +41,11 @@
             </el-table-column>
         </el-table>
         <el-pagination
-        class="d-flex jc-center pt-1"
-        background 
-        @size-change="handleSizeChange" :page-sizes="[10, 20, 30, 40]"  
-        @current-change="fetchArticleList" :current-page="current"
+        class="d-flex jc-center pt-1" 
+        background
+        @size-change="handleSizeChange" :page-sizes="[10, 20, 30, 40]"
+        :page-size="pageSize"  
+        @current-change="fetchList" :current-page="current"
         layout="sizes,prev, pager, next,jumper"
         :page-count="total">
         </el-pagination>
@@ -44,16 +55,17 @@
 
 <script>
   import BackTop from 'components/content/BackTop/BackTop.vue'
-  import dayjs from 'dayjs'
     export default {
+      name:'ArticleList',
       data() {
       return {
         current:1,
-        pageSize:10,
+        pageSize:20,
         total:0,
         model:[],
         search:"",
-        sort:{}
+        sort:{},
+        scrollTop:0,
       }
     },
     computed:{
@@ -65,13 +77,14 @@
           params:{
             current:this.current,
             pageSize:this.pageSize,
-            sort:this.sort
+            sort:this.sort,
+            query:{title:this.search}
           }
         }
       }
     },
     components:{
-      BackTop
+      BackTop,
     },
     methods: {
       /**
@@ -83,7 +96,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then( async () => {
-          const res = await this.$http.delete(`article/${id}`)
+          const res = await this.$http.delete(`rest/articles/${id}`)
           if(res.data.success){
             this.model.splice(index,1)
             this.$message({
@@ -101,25 +114,26 @@
       /**
        * 获取文章数据（按照约定好的分页和页序和排序规则）
        */
-      async fetchArticleList(index){
+      async fetchList(index){
         this.current = index || this.current
         const res = 
-        await this.$http.get("article/page",this.params)
-        res.data.list.map(e => {e.updatedAt
-          e.createdAt = dayjs(e.createdAt).format('YY/MM/DD HH:mm')
-          e.updatedAt = dayjs(e.updatedAt).format('YY/MM/DD HH:mm')
-          if(e.createdAt == e.updatedAt) e.updatedAt = "从未更新"
-        })
+        await this.$http.get("rest/articles/page",this.params)
         this.model = res.data.list
         this.total = res.data.page.total
         if(this.$refs.conent) this.$refs.conent.scrollTop = 0
+        this.$notify({
+            title: '数据加载完成',
+            type: 'success',
+            duration:1000,
+            message: `成功获取${this.model.length}条数据！`
+        });
       },
       /**
        * 改变分页大小，重新获取数据
        */
       handleSizeChange(size){
         this.pageSize = size
-        this.fetchArticleList()
+        this.fetchList()
       },
       /**
        * 排序发生改变时修改排序规则，向后端重新获取数据
@@ -132,19 +146,23 @@
         }else if(order.match(new RegExp('desc'))){
           this.sort = {[prop]:-1}
         }
-        this.fetchArticleList()
-      }
+        this.fetchList()
+      },
+
+
     },
     created(){
-      this.fetchArticleList()
+      this.fetchList()
+    },
+    beforeRouteLeave(to, from, next){
+      this.scrollTop = this.$refs.conent.scrollTop
+      next()
+    },
+    activated(){
+      this.$refs.conent.scrollTop=this.scrollTop
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  .search{
-    border-radius: 4px;
-    border: 1px solid #f1f1f1;
-    height: 30px;
-  }
 </style>

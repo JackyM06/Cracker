@@ -3,7 +3,7 @@
         <el-backtop target=".el-menu-demo"></el-backtop>
         <el-menu
           :default-active="'/main/'"
-          style="position:sticky;top:0px;border-bottom:none; padding:0 12%;z-index:999"
+          style=" position:sticky;top:0px;border-bottom:none; padding:0 12%;z-index:999"
           class="el-menu-demo box-s" 
           mode="horizontal"
           @select="handleSelect"
@@ -30,7 +30,9 @@
               <el-menu-item index="4-3"><i class="el-icon-turn-off"></i> 退出</el-menu-item>
           </el-submenu>
         </el-menu>
-        <router-view class="" style="padding:1rem 12%;height:90.6vh;overflow-y:scroll;" :key="$route.path"></router-view>
+        <keep-alive include="ArticleList">
+            <router-view class="" style="padding:1rem 12%;height:90.6vh;overflow-y:scroll;" :key="$route.path"></router-view>
+        </keep-alive>
         
     </div>
 </template>
@@ -39,10 +41,7 @@
     export default {
         methods:{
             handleSelect(){
-                this.$message({
-                    type:"info",
-                    message:"切换完成"
-                })
+
             }
         }
     }

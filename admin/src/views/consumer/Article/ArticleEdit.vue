@@ -5,8 +5,8 @@
                 <span class="fs-xs text-dark ">{{model.author.name}}</span>
             </el-form-item>
             <el-form-item label="时间" class="my-0 py-0">
-                <span class="fs-xs text-dark ">发布于：{{model.createdAt | data}}</span>
-                <span class="fs-xs text-dark pl-2">更新于：{{model.updatedAt | data}}</span>
+                <span class="fs-xs text-dark ">发布于：{{model.createdAt | date}}</span>
+                <span class="fs-xs text-dark pl-2">更新于：{{model.updatedAt | date(model.createdAt)}}</span>
             </el-form-item>
             <el-form-item label="标题">
                 <el-input v-model="model.title"></el-input>
@@ -15,6 +15,7 @@
                 <mavon-editor 
                 :class="[{full:isFull},{notFull:!isFull}]"
                 @save="save()"
+                @imgAdd="imgAdd"
                 ref="mavon"
                 @fullScreen="fullScreen"
                  v-model="model.content">
@@ -23,6 +24,7 @@
             <el-form-item >
                 <el-button type="info" :disabled="NoUpdate" 
                 native-type="submit" >保存改动</el-button>
+                <el-button type="info" @click="$router.go(-1)">返回</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -42,7 +44,7 @@
         },
         methods:{
             async fetchArticle(){
-                const res = await this.$http.get(`article/${this.id}`)
+                const res = await this.$http.get(`rest/articles/${this.id}`)
                 if(res.data){
                     this.model = res.data
                     setTimeout(()=>{
@@ -60,7 +62,7 @@
                   cancelButtonText: '取消',
                   type: 'warning'
                 }).then( async () => {
-                  const res = await this.$http.put(`article/${this.id}`,this.model)
+                  const res = await this.$http.put(`rest/articles/${this.id}`,this.model)
                   if(res.data){
                     this.fetchArticle()
                     this.$notify({
@@ -74,6 +76,13 @@
                     })
                   }
                 })
+            },
+            async imgAdd(pos, $file){
+                var formdata = new FormData()
+                formdata.append('file', $file)
+                const res = await this.$http.post('upload',formdata)
+                console.log(res)
+                this.$refs.mavon.$img2Url(pos,res.data.url)
             }
         },
         watch:{
