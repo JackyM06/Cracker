@@ -1,5 +1,5 @@
 <template>
-    <div class="articleGurid" ref="conent">
+    <div class="Gurid" ref="conent">
         <el-table
         :data="model" @sort-change="sortChange" 
         stripe 
@@ -53,7 +53,7 @@
         layout="sizes,prev, pager, next,jumper"
         :page-count="total">
         </el-pagination>
-        <back-top ref="backtop" target=".articleGurid"></back-top>
+        <back-top ref="backtop" target=".Gurid"></back-top>
     </div>
 </template>
 

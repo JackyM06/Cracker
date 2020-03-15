@@ -19,9 +19,9 @@
           </el-submenu>
           <el-submenu index="3">
               <template slot="title">内容管理</template>
-              <el-menu-item index="3-1">分类管理</el-menu-item>
-              <el-menu-item index="3-2">社区公告</el-menu-item>
-              <el-menu-item index="3-3">关于页管理</el-menu-item>
+              <el-menu-item index="/main/category">分类管理</el-menu-item>
+              <el-menu-item index="/main/notice">社区公告</el-menu-item>
+              <el-menu-item index="/main/about">关于页管理</el-menu-item>
           </el-submenu>
           <el-submenu index="4" style="position:absolute;right:12%;">
               <template slot="title"><i class="el-icon-setting"></i>Admin</template>

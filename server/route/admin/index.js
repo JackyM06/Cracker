@@ -3,12 +3,20 @@ module.exports = app=>{
     const router =  express.Router()
     const Article = require('../../models/Article')
     const User = require('../../models/User')
-    // router.get('/init',async(req,res)=>{
-    //     await req.Model.deleteMany({})
-    //     const data
-    //     await req.Model.insertMany(data)
-    //     res.send("ok")
-    // })
+    const Category = require('../../models/Category')
+    const About = require('../../models/About')
+    router.get('/init',async(req,res)=>{
+        await req.Model.deleteMany({})
+        const data = [{title:'关于',content:""}]
+        await req.Model.insertMany(data)
+        res.send("ok")
+    })
+    
+    router.get('/',async(req,res)=>{
+        const data = await req.Model.find().lean()
+        res.send(data)
+    })
+
     /**
      * 模型分页查询
      */
@@ -18,9 +26,9 @@ module.exports = app=>{
         sort = JSON.parse(sort)
         query = JSON.parse(query)
         
-        for(e in query){ query[e] = new RegExp(query[e],'i')}
+        for(e in query){if(e != 'author')query[e] = new RegExp(query[e],'i')}
 
-        const total = Math.ceil(await req.Model.find().count(query)/pageSize)
+        const total = Math.ceil(await req.Model.find().countDocuments(query)/pageSize)
 
         const list = await req.Model.find().where(query)
         .sort(sort).skip(pageSize*(current-1))
@@ -52,6 +60,16 @@ module.exports = app=>{
     router.put('/:id',async(req,res)=>{
         const sucess = await req.Model.findByIdAndUpdate(req.params.id,req.body)
         const data = await req.Model.findById(req.params.id).populate('author')
+        res.send(data)
+    })
+    /**
+     * 增加文档
+     */
+    router.post('/',async(req,res)=>{
+        // if(await req.Model.findOne(req.body.name)){
+
+        // }
+        const data = await req.Model.insertMany(req.body)
         res.send(data)
     })
 

@@ -1,6 +1,6 @@
 <template>
     <div v-if="Object.keys(model).length>0">
-        <el-tabs type="border-card" style="background:rgb(250,250,250)">
+        <el-tabs type="border-card" :lazy="true" style="background:rgb(250,250,250)">
             <el-tab-pane>
                 <span slot="label"><i class="el-icon-tickets"></i>用户信息</span>
                 <el-form label-width="80px" :model="model" @submit.native.prevent="save">
@@ -9,15 +9,7 @@
                         style="width:30%;min-width:200px;" maxlength="20" show-word-limit></el-input>
                     </el-form-item>
                     <el-form-item label="用户头像">
-                        <el-upload
-                          class="avatar-uploader"
-                          :show-file-list="false"
-                          :before-upload="beforeAvatarUpload"
-                          :action="uploadURL"
-                          :on-success="res=>$set(model,'avatar',res.url)">
-                          <img v-if="model.avatar" :src="model.avatar" style="width:100px;height:100px;" class="avatar">
-                          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
+                        <img-upload @success="url=>model.avatar=url" :img-src="model.avatar"></img-upload>
                     </el-form-item>
                     <el-form-item label="所在公司">
                        <el-input v-model="model.company" 
@@ -33,6 +25,10 @@
                         <el-button type="info" @click="$router.go(-1)">返回</el-button>
                     </el-form-item>
                 </el-form>
+            </el-tab-pane>
+            <el-tab-pane>
+                <span slot="label"><i class="el-icon-s-promotion"></i>作品信息</span>
+                <article-list :external-query="{author:model._id}"></article-list>
             </el-tab-pane>
             <el-tab-pane>
                 <span slot="label"><i class="el-icon-s-promotion"></i>粉丝查看({{model.fans_size}})</span>
@@ -53,6 +49,8 @@
 </template>
 
 <script>
+    import ArticleList from '../Article/ArticleList.vue'
+    import ImgUpload from 'components/content/ImgUpload/ImgUpload.vue'
     export default {
         props:{
             id:String
@@ -65,7 +63,7 @@
             }
         },
         methods:{
-            async fetchArticle(){
+            async fetch(){
                 const res = await this.$http.get(`rest/users/${this.id}`)
                 if(res.data){
                     this.model = res.data
@@ -96,21 +94,6 @@
                   }
                 })
             },
-            /**
-             * 文件上传前的判断
-             */
-            beforeAvatarUpload(file) {
-                const isJPG = ['image/jpeg','image/bmp','image/png'].includes(file.type);
-                console.log(file.type)
-                const isLt1M = file.size / 1024 / 1024 < 1;
-                if (!isJPG) {
-                  this.$message.error('上传头像图片只能是JPG/PNG/BMP格式!');
-                }
-                if (!isLt1M) {
-                  this.$message.error('上传头像图片大小不能超过 1MB!');
-                }
-                return isJPG && isLt1M;
-            }
         },
         watch:{
             model:{ //侦听数据变化用户判断是否启用提交按钮
@@ -124,7 +107,11 @@
             }
         },
         created(){
-            this.fetchArticle()
+            this.fetch()
+        },
+        components:{
+            ArticleList,
+            ImgUpload
         }
     }
 </script>
