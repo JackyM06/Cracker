@@ -3,7 +3,7 @@ const schame = new mongoose.Schema({
     title:{type:String},
     content:{type:String},
     author:{type:mongoose.SchemaTypes.ObjectId,ref:'User'},
-    categories:{type:mongoose.SchemaTypes.ObjectId,ref:"Category"},
+    categories:[{type:mongoose.SchemaTypes.ObjectId,ref:"Category"}],
     comments:[{
         user:{type:mongoose.SchemaTypes.ObjectId,ref:'User'},
         content:{type:String},

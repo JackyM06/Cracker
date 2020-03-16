@@ -10,6 +10,8 @@ require('./plugins/db')(app)
 
 require("./route/admin")(app)
 
+app.set('secret','23qg344gwe%2j3fn][]aa@3')
+
 
 app.listen(3000,()=>{
     console.log("http://localhost:3000")

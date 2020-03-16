@@ -5,15 +5,23 @@
         stripe 
         style="width: 100%">
             <el-table-column label="序号" type="index" :index="(current-1)*pageSize+1" width="50px" style-name="text-align:center"></el-table-column>
-            <el-table-column label="文章标题" prop="title" width="400px">
+            <el-table-column label="文章标题" prop="title" width="300px">
               <template slot-scope="scope">
                 <span :slot="scope" style="width:100%" class="text-ellipsis">{{scope.row.title}}</span>
               </template>
             </el-table-column>
+            <el-table-column label="分类" prop="categories" width="100px">
+              <template slot-scope="scope" >
+                  <span v-if="scope.row.categories" :slot="scope" style="width:100%" class="text-ellipsis">{{scope.row.categories.map(e=>e.name).join(',')}}</span>
+                  <span v-else>暂无分类</span>
+              </template>
+            </el-table-column>
             <el-table-column sortable="custom"  label="访问量" width="100px"  prop="visits"></el-table-column>
-            <el-table-column v-if="!externalQuery.hasOwnProperty('author')" label="作者" prop="author">
+            <el-table-column v-if="!externalQuery.hasOwnProperty('author')"  label="作者" prop="author">
               <template slot-scope="scope">
-                <span :slot="scope" style="width:100%" class="text-ellipsis">{{scope.row.author.name}}</span>
+                <span :slot="scope" 
+                @click="$router.push(`/main/user/${scope.row.author._id}`)" 
+                style="width:100%;cursor:pointer;" class="text-ellipsis">{{scope.row.author.name}}</span>
               </template>
             </el-table-column>
             <el-table-column sortable="custom" label="创建日期" prop="createdAt" width="120px">
@@ -127,12 +135,16 @@
         await this.$http.get("rest/articles/page",this.params)
         this.model = res.data.list
         this.total = res.data.page.total
-        if(this.$refs.conent) this.$refs.conent.scrollTop = 0
-        this.$notify({
+        if(index){
+          this.$refs.conent.scrollTop = 0
+          this.$notify({
             title: '数据加载完成',
             type: 'success',
             duration:1000,
-        });
+          })
+        } 
+        else this.$refs.conent.scrollTop = this.scrollTop
+        
       },
       /**
        * 改变分页大小，重新获取数据
@@ -154,8 +166,6 @@
         }
         this.fetchList()
       },
-
-
     },
     created(){
       this.fetchList()
@@ -165,7 +175,7 @@
       next()
     },
     activated(){
-      this.$refs.conent.scrollTop=this.scrollTop
+      this.fetchList()
     }
   }
 </script>

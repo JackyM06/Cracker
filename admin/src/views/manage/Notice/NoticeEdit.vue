@@ -1,7 +1,7 @@
 <template>
-    <div v-if="Object.keys(model).length>0">
+    <div v-if="!id || Object.keys(model).length>4">
         <el-form label-width="80px" :model="model" @submit.native.prevent="save">
-            <el-form-item label="文章分类" class="mb-0 py-0">
+            <el-form-item label="公告分类" class="mb-1 py-0">
                 <el-select v-model="model.categories" multiple filterable>
                   <el-option
                     v-for="item in categories"
@@ -11,10 +11,10 @@
                   </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="作者" class="my-0 py-0">
+            <el-form-item v-if="id"  label="发布者" class="my-0 py-0">
                 <span class="fs-xs text-dark ">{{model.author.name}}</span>
             </el-form-item>
-            <el-form-item label="时间" class="my-0 py-0">
+            <el-form-item v-if="id" label="时间" class="my-0 py-0">
                 <span class="fs-xs text-dark ">发布于：{{model.createdAt | date}}</span>
                 <span class="fs-xs text-dark pl-2">更新于：{{model.updatedAt | date(model.createdAt)}}</span>
             </el-form-item>
@@ -33,8 +33,8 @@
             </el-form-item>
             <el-form-item >
                 <el-button type="info" :disabled="NoUpdate" 
-                native-type="submit" >保存改动</el-button>
-                <el-button type="info" @click="$router.push('/main/article')">返回</el-button>
+                native-type="submit" >保存</el-button>
+                <el-button type="info" @click="$router.go(-1)">返回</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -48,14 +48,14 @@
         data () {
             return {
                 categories:[],
-                model:{},
+                model:{title:"请输入公告标题",content:"输入公告内容",categories:[]},
                 isFull:false,
                 NoUpdate:true
             }
         },
         methods:{
-            async fetchArticle(){
-                const res = await this.$http.get(`rest/articles/${this.id}`)
+            async fetchNotice(){
+                const res = await this.$http.get(`rest/notices/${this.id}`)
                 if(res.data){
                     this.model = res.data
                     setTimeout(()=>{
@@ -68,18 +68,27 @@
                 this.isFull = status
             },
             async save(){
-                this.$confirm('是否整改该文章?', '提示', {
+                this.$confirm(this.id?'是否整改该文章?':'是否新建公告？', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                   type: 'warning'
                 }).then( async () => {
-                  const res = await this.$http.put(`rest/articles/${this.id}`,this.model)
+                    let res=null
+                  if(this.id){
+                      res = await this.$http.put(`rest/notices/${this.id}`,this.model)
+                  }else{
+                      res = await this.$http.post('rest/notices',{author:"5e6c8193ee0d280fc02505c5",...this.model})
+                  }
                   if(res.data){
-                    this.fetchArticle()
-                    this.$notify({
-                        title: '整改完成',
-                        message: this.$createElement('i', { style: 'color: teal'}, '根据你的管理员权限，已成功整改该文章！')
-                    });
+                    if(this.id){
+                        this.fetchNotice()
+                        this.$notify({
+                        title: '保存完成',
+                        })
+                    }else{
+                        this.$router.go(-1)
+                    }
+                    
                   }else{
                     this.$message({
                       type: 'error',
@@ -92,7 +101,6 @@
                 var formdata = new FormData()
                 formdata.append('file', $file)
                 const res = await this.$http.post('upload',formdata)
-                console.log(res)
                 this.$refs.mavon.$img2Url(pos,res.data.url)
             },
             async fetchCats(){
@@ -112,7 +120,9 @@
             }
         },
         created(){
-            this.fetchArticle()
+            if(this.id){
+                this.fetchNotice()
+            }
             this.fetchCats()
         }
     }

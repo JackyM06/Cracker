@@ -6,8 +6,10 @@ const Main = ()=>import("views/main/Main.vue")
     const UserEdit = ()=>import('views/consumer/User/UserEdit.vue')
     const Category = ()=>import('views/manage/Category.vue')
     const About = ()=>import('views/manage/About.vue')
-    const Notice = ()=>import('views/manage/Notice.vue')
-
+    const NoticeList = ()=>import('views/manage/Notice/NoticeList.vue')
+    const NoticeEdit = ()=>import('views/manage/Notice/NoticeEdit.vue')
+    const AdminList = ()=>import('views/manage/AdminList.vue')
+const Login = ()=>import('views/login/Login.vue')
 const routes = [
     { path: '/', redirect: '/main'},
     { path: '/main', 
@@ -19,9 +21,13 @@ const routes = [
           { path: 'user', component: User},
           { path: 'user/:id', component: UserEdit,props:true},
           { path: 'category', component: Category},
-          { path: 'notice', component: Notice},
+          { path: 'notice', component: NoticeList},
+          { path: 'notice/create', component: NoticeEdit,props:true},
+          { path: 'notice/:id', component: NoticeEdit,props:true},
           { path: 'about', component: About},
+          { path: 'admin', component: AdminList},
       ]
-    }
+    },
+    {path:'/login',component:Login}
 ]
 export default routes

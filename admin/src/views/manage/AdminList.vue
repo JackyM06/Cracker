@@ -6,24 +6,30 @@
     <el-table-column type="expand">
       <template slot-scope="props">
         <el-form label-position="left" inline class="demo-table-expand">
-          <el-form-item label="一级分类" size="mini" style="width:100%">
-            <el-select v-model="props.row.parent" filterable>
+          <el-form-item label="管理等级" size="mini" style="width:100%">
+            <el-select v-model="props.row.level" filterable>
               <el-option
-                v-for="item in categories" v-show="item._id!=props.row._id"
+                v-for="item in AdminLevels" v-show="item._id!=props.row.level"
                 :key="item._id"
                 :label="item.name"
                 :value="item._id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="分类名称" size="mini" style="width:100%">
-            <el-input v-model="props.row.name"></el-input>
+          <el-form-item label="个人姓名" size="mini" style="width:100%">
+            <el-input v-model="props.row.name" maxlength="10" show-word-limit></el-input>
           </el-form-item>
-          <el-form-item label="分类描述" size="mini" style="width:100%">
-            <el-input v-model="props.row.desc"></el-input>
+          <el-form-item label="个人描述" size="mini" style="width:100%">
+            <el-input v-model="props.row.desc" maxlength="10" show-word-limit></el-input>
           </el-form-item>
-          <el-form-item label="分类LOGO" size="mini" style="width:100%">
-            <img-upload @success="url=>props.row.img=url" :img-src="props.row.img"></img-upload>
+          <el-form-item label="手机号码" size="mini" style="width:100%">
+            <el-input v-model="props.row.teleNumber" ></el-input>
+          </el-form-item>
+          <el-form-item label="登录密码" size="mini" style="width:100%">
+            <el-input v-model="props.row.password" show-password placeholder="重置密码"></el-input>
+          </el-form-item>
+          <el-form-item label="个人照片" size="mini" style="width:100%">
+            <img-upload @success="url=>$set(props.row,'avatar',url)" :img-src="props.row.avatar"></img-upload>
           </el-form-item>
           <el-form-item style="width:100%">
               <el-button size="mini" @click="save(props.row,props.index)"  type="info">保存</el-button>
@@ -33,26 +39,33 @@
       </template>
     </el-table-column>
     <el-table-column
-      label="ID"
-      prop="_id">
-    </el-table-column>
-    <el-table-column
-      label="分类名称"
+      label="个人姓名"
       prop="name">
     </el-table-column>
     <el-table-column
-      label="描述"
-      prop="desc">
+      label="手机号码"
+      prop="teleNumber">
     </el-table-column>
     <el-table-column
-      label="浏览人数"
-      prop="visits">
+      label="个人描述"
+      prop="desc">
+    </el-table-column>
+    <el-table-column label="管理等级" prop="level">
+        <template slot-scope="props">
+            <span v-if="props.row.level">{{props.row.level.name}}</span>
+            <span v-else>暂无等级</span>
+        </template>
+    </el-table-column>
+    <el-table-column label="个人照片" prop="avatar">
+        <template slot-scope="props">
+            <img :src="props.row.avatar" class="avatar" alt="">
+        </template>
     </el-table-column>
      <el-table-column fixed="right">
         <template slot="header" slot-scope="scope">
           <el-input :slot="scope" v-model="search"
-          @keyup.enter.native = "fetch(1)"
-           size="mini" placeholder="搜索分类"/>
+          @keyup.enter.native = "fetch(1)" clearable
+           size="mini" placeholder="搜索"/>
         </template>
       </el-table-column>
     </el-table>
@@ -67,28 +80,34 @@
     </el-pagination>
     <back-top ref="backtop" target=".Gurid"></back-top>
     <el-dialog
-      title="增加分类"
+      title="增加管理员"
       :visible.sync="dialogVisible"
       width="30%">
         <el-form inline>
-          <el-form-item label="一级分类" size="mini" style="width:100%">
-            <el-select v-model="newCategory.parent" filterable>
+          <el-form-item label="管理等级" size="mini" style="width:100%">
+            <el-select v-model="newAdmin.level" filterable>
               <el-option
-                v-for="item in model"
+                v-for="item in AdminLevels"
                 :key="item._id"
                 :label="item.name"
                 :value="item._id">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="分类名称" size="mini" style="width:100%">
-            <el-input v-model="newCategory.name"></el-input>
+          <el-form-item label="个人姓名" size="mini" style="width:100%">
+            <el-input v-model="newAdmin.name" maxlength="6" show-word-limit></el-input>
           </el-form-item>
-          <el-form-item label="分类描述" size="mini" style="width:100%">
-            <el-input v-model="newCategory.desc"></el-input>
+          <el-form-item label="个人描述" size="mini" style="width:100%">
+            <el-input v-model="newAdmin.desc" maxlength="10" show-word-limit></el-input>
           </el-form-item>
-          <el-form-item label="分类LOGO" size="mini" style="width:100%">
-            <img-upload @success="url=>$set(newCategory,'img',url)" :img-src="newCategory.img"></img-upload>
+          <el-form-item label="手机号码" size="mini" style="width:100%">
+            <el-input v-model="newAdmin.teleNumber"></el-input>
+          </el-form-item>
+          <el-form-item label="登录密码" size="mini" style="width:100%">
+            <el-input v-model="newAdmin.password" show-password></el-input>
+          </el-form-item>
+          <el-form-item label="个人照片" size="mini" style="width:100%">
+            <img-upload @success="url=>$set(newAdmin,'avatar',url)" :img-src="newAdmin.avatar"></img-upload>
           </el-form-item>
         </el-form>
       <span slot="footer" class="dialog-footer">
@@ -105,7 +124,7 @@
     export default {
         data () {
             return {
-                categories:[],
+                AdminLevels:[],
                 current:1,
                 pageSize:20,
                 total:0,
@@ -113,7 +132,7 @@
                 search:"",
                 sort:{},
                 dialogVisible:false,
-                newCategory:{}
+                newAdmin:{}
             }
         },
         computed:{
@@ -134,25 +153,23 @@
         methods:{
             async fetch(index){
                 this.current = index || this.current
-                const res = await this.$http.get('rest/categories/page',this.params)
+                const res = await this.$http.get('rest/admins/page',this.params)
                 this.model = res.data.list
                 this.total = res.data.page.total
                 this.$refs.conent.scrollTop = 0
-                this.fetchCategories()
             },
-            async save(category){
-                const res = await this.$http.put(`rest/categories/${category._id}`,category)
+            async save(admin){
+                const res = await this.$http.put(`rest/admins/${admin._id}`,admin)
                 if(res.data){
-                    this.fetchCategories()
                     this.$message.success('保存成功')
+                    this.fetch()
                 }else{
                     this.$message.error('保存失败')
                 }
             },
             async drop(id,index){
-                const res = await this.$http.delete(`rest/categories/${id}`)
+                const res = await this.$http.delete(`rest/admins/${id}`)
                 if(res.data.success){
-                    this.fetchCategories()
                     this.model.splice(index,1)
                     this.$message.success('删除成功')
                 }else{
@@ -164,22 +181,23 @@
               this.fetch()
             },
             async saveNewCate(){
-              const res = await this.$http.post('rest/categories',this.newCategory)
+              const res = await this.$http.post('rest/admins',this.newAdmin)
               if(res.data){
                 this.$message.success("增加完成")
                 this.dialogVisible = false
-                this.newCategory = {}
+                this.newAdmin = {}
+                this.fetch()
               }
             },
-            async fetchCategories(){
-                const cate = await this.$http.get('rest/categories')
-                this.categories = cate.data
+            async fetchAdminLevels(){
+                const res = await this.$http.get('rest/admin_levels')
+                this.AdminLevels = res.data
             }
       
         },
         created(){
             this.fetch()
-            
+            this.fetchAdminLevels()
         },
         components:{
             ImgUpload,
@@ -198,5 +216,9 @@
   bottom: 90px;
   right: 40px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
+}
+.avatar{
+    width: 30px;
+    height: 30px;
 }
 </style>

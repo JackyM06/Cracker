@@ -124,13 +124,15 @@
         await this.$http.get("rest/users/page",this.params)
         this.model = res.data.list
         this.total = res.data.page.total
-        if(this.$refs.conent) this.$refs.conent.scrollTop = 0
-        this.$notify({
+        if(index){
+          this.$refs.conent.scrollTop = 0
+          this.$notify({
             title: '数据加载完成',
             type: 'success',
             duration:1000,
-            message: `成功获取${this.model.length}条数据！`
-        });
+          })
+        } 
+        else this.$refs.conent.scrollTop = this.scrollTop
       },
       /**
        * 改变分页大小，重新获取数据
@@ -155,15 +157,12 @@
 
 
     },
-    created(){
-      this.fetchList()
-    },
     beforeRouteLeave(to, from, next){
       this.scrollTop = this.$refs.conent.scrollTop
       next()
     },
     activated(){
-      this.$refs.conent.scrollTop=this.scrollTop
+      this.fetchList()
     }
   }
 </script>

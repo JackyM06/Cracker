@@ -22,13 +22,13 @@
                     <el-form-item >
                         <el-button type="info" :disabled="NoUpdate" 
                         native-type="submit" >保存改动</el-button>
-                        <el-button type="info" @click="$router.go(-1)">返回</el-button>
+                        <el-button type="info" @click="$router.push('/main/user')">返回</el-button>
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
             <el-tab-pane>
                 <span slot="label"><i class="el-icon-s-promotion"></i>作品信息</span>
-                <article-list :external-query="{author:model._id}"></article-list>
+                <article-list :key="id" :external-query="{author:id}"></article-list>
             </el-tab-pane>
             <el-tab-pane>
                 <span slot="label"><i class="el-icon-s-promotion"></i>粉丝查看({{model.fans_size}})</span>
@@ -81,7 +81,7 @@
                 }).then( async () => {
                   const res = await this.$http.put(`rest/users/${this.id}`,this.model)
                   if(res.data){
-                    this.fetchArticle()
+                    this.fetch()
                     this.$notify({
                         title: '整改完成',
                         message: this.$createElement('i', { style: 'color: teal'}, '根据你的管理员权限，已成功整改该文章！')
