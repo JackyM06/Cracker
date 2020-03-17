@@ -34,7 +34,7 @@
             <el-form-item >
                 <el-button type="info" :disabled="NoUpdate" 
                 native-type="submit" >保存改动</el-button>
-                <el-button type="info" @click="$router.push('/main/article')">返回</el-button>
+                <el-button type="info" @click="$router.go(-1)">返回</el-button>
             </el-form-item>
         </el-form>
     </div>

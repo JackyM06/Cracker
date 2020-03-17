@@ -29,7 +29,7 @@
               <el-menu-item @click="Close" ><i class="el-icon-turn-off"></i> 退出</el-menu-item>
           </el-submenu>
         </el-menu>
-        <keep-alive include="ArticleList">
+        <keep-alive include="ArticleList,UserList">
             <router-view class="" style="padding:1rem 12%;height:90.6vh;overflow-y:scroll;" :key="$route.path"></router-view>
         </keep-alive>
         

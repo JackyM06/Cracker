@@ -51,7 +51,8 @@ module.exports = app=>{
      * 按id查找文档
      */
     router.get('/:id',async(req,res)=>{
-        const data = await req.Model.findById(req.params.id).populate('author').populate('level')
+        const data = await req.Model.findById(req.params.id)
+        .populate('editor').populate('author').populate('level')
         res.send(data || "未查找到该项目")
     })
     /**

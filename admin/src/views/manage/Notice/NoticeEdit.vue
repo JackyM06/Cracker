@@ -17,6 +17,7 @@
             <el-form-item v-if="id" label="时间" class="my-0 py-0">
                 <span class="fs-xs text-dark ">发布于：{{model.createdAt | date}}</span>
                 <span class="fs-xs text-dark pl-2">更新于：{{model.updatedAt | date(model.createdAt)}}</span>
+                <span v-if="model.editor" class="fs-xs text-dark pl-2">管理员：{{model.editor.name}} 进行了最后一次更新</span>
             </el-form-item>
             <el-form-item label="标题">
                 <el-input v-model="model.title"></el-input>
@@ -75,9 +76,9 @@
                 }).then( async () => {
                     let res=null
                   if(this.id){
-                      res = await this.$http.put(`rest/notices/${this.id}`,this.model)
+                      res = await this.$http.put(`rest/notices/${this.id}`,{editor:localStorage.admin,...this.model})
                   }else{
-                      res = await this.$http.post('rest/notices',{author:"5e6c8193ee0d280fc02505c5",...this.model})
+                      res = await this.$http.post('rest/notices',{author:localStorage.admin,...this.model})
                   }
                   if(res.data){
                     if(this.id){

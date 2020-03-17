@@ -28,10 +28,17 @@
             </el-tab-pane>
             <el-tab-pane>
                 <span slot="label"><i class="el-icon-s-promotion"></i>作品信息</span>
-                <article-list :key="id" :external-query="{author:id}"></article-list>
+                <gurid :external-query="{author:id}" :search-name="'title'"
+                :list-name="'article'" :resource-name="'articles'"
+                :column = "[
+                {label:'文章标题',prop:'title',width:'300px'},
+                {label:'分类',prop:'categories'},
+                {label:'访问量',prop:'visits',sort:'custom'},
+                ]" 
+                ></gurid>
             </el-tab-pane>
             <el-tab-pane>
-                <span slot="label"><i class="el-icon-s-promotion"></i>粉丝查看({{model.fans_size}})</span>
+                <span slot="label"><i class="el-icon-s-data"></i>粉丝查看({{model.fans_size}})</span>
                 <el-table :data="model.fans">
                     <el-table-column label="用户ID" prop="_id"></el-table-column>
                     <el-table-column label="用户名" prop="name"></el-table-column>
@@ -49,7 +56,7 @@
 </template>
 
 <script>
-    import ArticleList from '../Article/ArticleList.vue'
+    import Gurid from 'components/content/Gurid/Gurid.vue'
     import ImgUpload from 'components/content/ImgUpload/ImgUpload.vue'
     export default {
         props:{
@@ -110,7 +117,7 @@
             this.fetch()
         },
         components:{
-            ArticleList,
+            Gurid,
             ImgUpload
         }
     }

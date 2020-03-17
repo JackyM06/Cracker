@@ -44,10 +44,6 @@
       label="描述"
       prop="desc">
     </el-table-column>
-    <el-table-column
-      label="浏览人数"
-      prop="visits">
-    </el-table-column>
      <el-table-column fixed="right">
         <template slot="header" slot-scope="scope">
           <el-input :slot="scope" v-model="search"
