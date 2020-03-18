@@ -35,13 +35,6 @@
         this.$refs.conent.scrollTop = 0
       }
     }
-    // beforeRouteLeave(to, from, next){
-    //   this.scrollTop = this.$refs.conent.scrollTop
-    //   next()
-    // },
-    // activated(){
-    //   this.fetchList()
-    // }
   }
 </script>
 

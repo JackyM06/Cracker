@@ -161,7 +161,9 @@
             duration:1000,
           })
         } 
-        this.$emit('gurid-change')
+        this.$emit('gurid-change'
+        
+        )
       },
       /**
        * 改变分页大小，重新获取数据

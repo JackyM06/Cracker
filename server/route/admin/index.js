@@ -5,13 +5,133 @@ module.exports = app=>{
     })
     const assert = require('http-assert')
     const jwt = require("jsonwebtoken")
-    // router.get('/init',async(req,res)=>{
-    //     await req.Model.deleteMany({})
-    //     // console.log(req.ModuleName)
-    //     // const data = [{name:"顶级"},{name:"管理"},{name:"普通"}]
-    //     await req.Model.insertMany(data)
-    //     res.send("ok")
-    // })
+    router.get('/init',async(req,res)=>{
+        // await req.Model.deleteMany({})
+        // console.log(req.ModuleName)
+        const data = [
+            {
+                title:'测试评论文章',
+                content:'测试专用',
+                author:'5e6c8193ee0d280fc02505c2',
+                comments:[
+                    {
+                        user:'5e6c8193ee0d280fc02505c5',
+                        content:'我是评论测试我是评论测试我是asdfasdfas评论测试我是评论测试',
+                        createDate:new Date(),
+                        communicates:[
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测asdfasdfasdf试回复',
+                                createDate:new Date()
+                            },
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测asdfasdfasdfasdfasdf试回复',
+                                createDate:new Date()
+                            },
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测asdfasdfasdf试回dfdfd复',
+                                createDate:new Date()
+                            },
+                        ]
+                    },
+                    {
+                        user:'5e6c8193ee0d280fc02505c5',
+                        content:'我是评论测试我是评论测试我是评论dsasdfasdfasdfasdf测试我是评论测试',
+                        createDate:new Date(),
+                        communicates:[
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测ddddddddd试回复',
+                                createDate:new Date()
+                            },
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测ddddddddd试回复',
+                                createDate:new Date()
+                            },
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测ddddddddd试回复',
+                                createDate:new Date()
+                            },
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测ddddddddd试回复',
+                                createDate:new Date()
+                            },
+                        ]
+                    },
+                    {
+                        user:'5e6c8193ee0d280fc02505c5',
+                        content:'我是评论测试我是评论测试我是评asdfasdfasdf论测试我是评论测试',
+                        createDate:new Date(),
+                        communicates:[
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测试回复',
+                                createDate:new Date()
+                            },
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测试回复',
+                                createDate:new Date()
+                            },
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测试回复',
+                                createDate:new Date()
+                            },
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测试回复',
+                                createDate:new Date()
+                            },
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测试回复',
+                                createDate:new Date()
+                            },
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测试回复',
+                                createDate:new Date()
+                            },
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测试回复',
+                                createDate:new Date()
+                            },
+                            {
+                                user:'5e6c8193ee0d280fc02505c6',
+                                resp_user:'5e6c8193ee0d280fc02505c2',
+                                content:'我也是测asdfasdfasdf试回复',
+                                createDate:new Date()
+                            },
+                        ]
+                    },
+                ]
+            
+            },
+        ]
+        await req.Model.insertMany(data)
+        res.send("ok")
+    })
     
     router.get('/',async(req,res)=>{
         const data = await req.Model.find().lean()
@@ -51,8 +171,9 @@ module.exports = app=>{
      * 按id查找文档
      */
     router.get('/:id',async(req,res)=>{
-        const data = await req.Model.findById(req.params.id)
-        .populate('editor').populate('author').populate('level')
+        const data = await req.Model.findById(req.params.id).select("+content")
+        .populate('editor').populate('author').populate('level').populate('comments.user')
+        .populate('comments.communicates.user').populate('comments.communicates.resp_user')
         res.send(data || "未查找到该项目")
     })
     /**
@@ -87,11 +208,43 @@ module.exports = app=>{
     })
 
     /**
-     * 数据分析接口
+     * 数据日志接口
      */
-    // app.use('/admin/api/v1/data',authMiddle(),async(req,res)=>{
-
-    // })
+    const dayjs = require('dayjs')
+    app.get('/admin/api/v1/data',authMiddle(),async(req,res)=>{
+        let datalog = {visits:0,comments:0,supporters:0}
+        const Article = await require('../../models/Article').find({createdAt:
+            {'$gte':dayjs().subtract(1, 'day'),'$lt':dayjs()}}) //昨日到今日的数据
+        datalog.articles =  Article.length
+        Article.map(e =>{ //统计文章的访客、评论数、点赞数数据
+            datalog.visits += e.visits
+            datalog.comments += e.comments.length
+            if(e.comments.communicates){
+                datalog.comments += e.comments.communicates.length
+            }
+            datalog.supporters += e.supporters.length
+        })
+        const categories_visits = await require('../../models/Category').aggregate([
+            {
+                $lookup:{
+                    from:'articles',
+                    localField:'_id',
+                    foreignField:'categories',
+                    as:'visits'
+                }
+            },
+            {
+                $addFields:{
+                    visits:{$sum:['$visits.visits']}
+                }
+            },
+            {$sort:{visits:-1}},
+            {$limit:10}
+        ])
+        // .map(e=>({name:e.name,visies:e.list.length}))
+        datalog.categories = categories_visits
+        res.send(datalog)
+    })
 
 
     /**

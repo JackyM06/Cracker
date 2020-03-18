@@ -1,5 +1,5 @@
 <template>
-    <chart  :options="options" :auto-resize="true"></chart>
+    <chart ref="charts" :options="options" :auto-resize="true"></chart>
 </template>
 
 <script>
@@ -21,8 +21,6 @@
             }
         },
         mounted(){
-            
-            
             this.options={
                 tooltip: {
                     trigger: 'item',
@@ -34,7 +32,6 @@
                     left: 2,
                     top: 20,
                     height:140,
-                    data: this.CatsName,
                 },
                  title: [{
                    left: 'center',
@@ -58,9 +55,14 @@
                                 show: true
                             }
                         },
-                        data: this.Cats
                     }
                 ]
+            }
+        },
+        watch:{
+            Cats(newValue){
+                this.$set(this.options.series[0],'data',newValue)
+                this.$set(this.options.legend,'data',this.CatsName)
             }
         }
     }

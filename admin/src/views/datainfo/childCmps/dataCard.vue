@@ -10,7 +10,7 @@
     export default {
         props:{
             title:String,
-            number:String
+            number:Number
         }
     }
 </script>

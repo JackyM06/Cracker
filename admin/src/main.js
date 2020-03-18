@@ -6,12 +6,13 @@ import './plugins/element.js'
 import 'assets/scss/style.scss'
 
 import ECharts from 'vue-echarts'
+import echarts from 'echarts'
 import "echarts/lib/chart/bar";
 import "echarts/lib/component/tooltip";
 import "echarts/lib/component/legend";
 import "echarts/lib/component/title";
 Vue.component('chart', ECharts)
-
+Vue.prototype.$echarts = echarts
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 Vue.component('mavonEditor',mavonEditor)

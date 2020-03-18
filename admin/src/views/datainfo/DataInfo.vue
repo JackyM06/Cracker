@@ -1,14 +1,14 @@
 <template>
     <div>
         <div class="d-flex jc-between">
-            <data-card class="bg-carrot" title="昨日用户访问量" number="8721"></data-card>
-            <data-card class="bg-nephtitis" title="今日文章发布数" number="448"></data-card>
-            <data-card class="bg-pomeg" title="今日评论数" number="832"></data-card>
-            <data-card class="bg-wet" title="今日点赞数" number="1802"></data-card>
+            <data-card class="bg-carrot" title="昨日用户访问量" :number="model.visits"></data-card>
+            <data-card class="bg-nephtitis" title="今日文章发布数" :number="model.articles"></data-card>
+            <data-card class="bg-pomeg" title="今日评论数" :number="model.comments"></data-card>
+            <data-card class="bg-wet" title="今日点赞数" :number="model.supporters"></data-card>
         </div>
         <div class="d-flex gruid jc-between pt-4">
              <echart-line class="echart-line" :Cats="Data" title="近7日用户互动类型分布" :xData="xData"></echart-line>
-             <echart-pie  class="echart-pie" :Cats="Cats" title="各分类访问量"></echart-pie>
+             <echart-pie  class="echart-pie" :Cats="Cats" title="分类访问占比TOP10"></echart-pie>
         </div>
     </div>
 </template>
@@ -24,7 +24,8 @@
             return {
                 Cats:[],
                 Data:[],
-                xData:[]
+                xData:[],
+                model:{}
             }
         },
         components:{
@@ -32,16 +33,18 @@
             echartPie,
             echartLine
         },
+        methods:{
+            async fetch(){
+                const res = await this.$http.get('data')
+                this.model = res.data
+                this.$set(this,'Cats',res.data.categories.map(e=>({value:e.visits,name:e.name})))
+            }
+        },
+        mounted(){
+            this.fetch()
+        },
         created(){
-            this.Cats = [
-                {value:433,name:'计算机硬件'},
-                {value:933,name:'web'},
-                {value:637,name:'数据库'},
-                {value:537,name:'服务器'},
-                {value:837,name:'JavaScript'},
-                {value:137,name:'PHP'},
-                {value:237,name:'Java'},
-            ]
+
             this.Data =  [
                 {
                     name: '用户访问量',
@@ -61,6 +64,7 @@
                 },
             ]
             this.xData = ['03/06','03/07','03/08','03/09','03/10','03/11','03/12']
+            this.fetch()
         }
     }
 </script>

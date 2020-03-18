@@ -11,6 +11,7 @@
           {label:'粉丝量',prop:'fans_size',sort:'custom'},
           {label:'关注数',prop:'followers_size',sort:'custom'},
           ]" 
+          @gurid-change="guridChange"
         ></gurid>
         <back-top ref="backtop" target=".Gurid"></back-top>
     </div>
@@ -31,6 +32,9 @@
       Gurid
     },
     methods: {
+      guridChange(){
+        this.$refs.conent.scrollTop = 0
+      }
     },
     beforeRouteLeave(to, from, next){
       this.scrollTop = this.$refs.conent.scrollTop
