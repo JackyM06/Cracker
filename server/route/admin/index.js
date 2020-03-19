@@ -214,7 +214,7 @@ module.exports = app=>{
     app.get('/admin/api/v1/data',authMiddle(),async(req,res)=>{
         let datalog = {visits:0,comments:0,supporters:0}
         const Article = await require('../../models/Article').find({createdAt:
-            {'$gte':dayjs().subtract(1, 'day'),'$lt':dayjs()}}) //昨日到今日的数据
+            {'$gte':dayjs(dayjs().format('YYYY-MM-DD'))}}) //今日的数据
         datalog.articles =  Article.length
         Article.map(e =>{ //统计文章的访客、评论数、点赞数数据
             datalog.visits += e.visits
@@ -241,8 +241,10 @@ module.exports = app=>{
             {$sort:{visits:-1}},
             {$limit:10}
         ])
-        // .map(e=>({name:e.name,visies:e.list.length}))
+        datalog.History = await require('../../models/DataLog').find().sort({createAt:-1}).limit(6)
+        datalog.createAt = dayjs()
         datalog.categories = categories_visits
+        await
         res.send(datalog)
     })
 

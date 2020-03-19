@@ -65,7 +65,7 @@
             Switch(){
                 this.$message.warning("登录成功后将正式退出原账号！")
                 this.$router.push('/login')
-            }
+            },
         },
         created(){
             this.fetch()

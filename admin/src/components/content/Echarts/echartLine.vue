@@ -50,6 +50,12 @@
                 },
                 series: this.Cats.map(e => {e.type = "line";return e})
             }
+        },
+        watch:{
+            Cats(newValue){
+                this.$set(this.options,'series',newValue.map(e => {e.type = "line";return e}))
+                this.$set(this.options.legend,'data',newValue.map(e=>e.name))
+            }
         }
     }
 </script>

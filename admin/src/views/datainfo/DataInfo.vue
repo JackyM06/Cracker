@@ -18,6 +18,7 @@
 
     import echartPie from 'components/content/Echarts/echartPie.vue'
     import echartLine from 'components/content/Echarts/echartLine.vue'
+    import dayjs from 'dayjs'
 
     export default {
         data(){
@@ -38,32 +39,32 @@
                 const res = await this.$http.get('data')
                 this.model = res.data
                 this.$set(this,'Cats',res.data.categories.map(e=>({value:e.visits,name:e.name})))
+                this.Data =  [
+                    {
+                        name: '用户访问量',
+                        data: [this.model.visits,...this.model.History.map(e=>e.visits)].reverse()
+                    },
+                    {
+                        name: '当日文章发布数',
+                        data: [this.model.articles,...this.model.History.map(e=>e.articles)].reverse()
+                    },
+                    {
+                        name: '当日评论数',
+                        data: [this.model.comments,...this.model.History.map(e=>e.comments)].reverse()
+                    },
+                    {
+                        name: '当日点赞数',
+                        data: [this.model.supporters,...this.model.History.map(e=>e.supporters)].reverse()
+                    },
+                ]
             }
         },
         mounted(){
             this.fetch()
         },
         created(){
-
-            this.Data =  [
-                {
-                    name: '用户访问量',
-                    data: [1120, 1132, 801, 734, 990, 630, 1210]
-                },
-                {
-                    name: '当日文章发布数',
-                    data: [220, 182, 191, 234, 290, 330, 310]
-                },
-                {
-                    name: '当日评论数',
-                    data: [150, 232, 201, 154, 190, 330, 410]
-                },
-                {
-                    name: '当日点赞数',
-                    data: [320, 332, 301, 334, 390, 330, 320]
-                },
-            ]
-            this.xData = ['03/06','03/07','03/08','03/09','03/10','03/11','03/12']
+            // 创建折线图的时间轴
+            this.xData = new Array(7).fill().map((e,index)=>dayjs().subtract(index,'day').format('MM-DD')).reverse()
             this.fetch()
         }
     }
