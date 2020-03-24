@@ -5,6 +5,10 @@ import store from './store'
 
 Vue.config.productionTip = false
 
+import http from './network/http'
+Vue.prototype.$http = http
+
+
 new Vue({
   router,
   store,

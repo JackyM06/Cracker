@@ -1,6 +1,7 @@
 <template>
     <el-upload
       class="avatar-uploader"
+      :headers="authHeader"
       :show-file-list="false"
       :before-upload="beforeAvatarUpload"
       :action="uploadURL"
@@ -28,7 +29,12 @@
                 }
                 return isJPG && isLt1M;
             }
-        }
+        },
+        // watch:{
+        //   imgSrc(newValue){
+        //     this.$set(this,'imgSrc',newValue)
+        //   }
+        // }
     }
 </script>
 

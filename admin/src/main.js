@@ -37,6 +37,9 @@ Vue.mixin({
   computed: {
     uploadURL(){
       return this.$http.defaults.baseURL+'/upload'
+    },
+    authHeader(){
+      return  {Authorization:'Bearer '+localStorage.token}
     }
   }
 })

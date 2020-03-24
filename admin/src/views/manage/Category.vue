@@ -5,7 +5,7 @@
     :data="model" style="width: 100%">
     <el-table-column type="expand">
       <template slot-scope="props">
-        <el-form label-position="left" inline class="demo-table-expand">
+        <el-form label-position="left" inline>
           <el-form-item label="一级分类" size="mini" style="width:100%">
             <el-select v-model="props.row.parent" filterable>
               <el-option
@@ -23,7 +23,7 @@
             <el-input v-model="props.row.desc"></el-input>
           </el-form-item>
           <el-form-item label="分类LOGO" size="mini" style="width:100%">
-            <img-upload @success="url=>props.row.img=url" :img-src="props.row.img"></img-upload>
+            <img-upload @success="url=>$set(props.row,'img',url)" :img-src="props.row.img"></img-upload>
           </el-form-item>
           <el-form-item style="width:100%">
               <el-button size="mini" @click="save(props.row,props.index)"  type="info">保存</el-button>
