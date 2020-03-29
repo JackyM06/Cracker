@@ -8,6 +8,7 @@ Vue.config.productionTip = false
 import http from './network/http'
 Vue.prototype.$http = http
 
+import './assets/scss/style.scss'
 
 new Vue({
   router,
