@@ -8,7 +8,12 @@ Vue.config.productionTip = false
 import http from './network/http'
 Vue.prototype.$http = http
 
+import "bootstrap"
+import "bootstrap/dist/css/bootstrap.css"
+import 'jquery'
+
 import './assets/scss/style.scss'
+
 
 new Vue({
   router,

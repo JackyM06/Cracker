@@ -1,6 +1,7 @@
 <template>
     <div>
         <top-bar></top-bar>
+        <router-view class="container"></router-view>
     </div>
 </template>
 

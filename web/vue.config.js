@@ -1,3 +1,4 @@
+const webpack = require("webpack");
 module.exports={
     configureWebpack:{
         resolve:{
@@ -8,7 +9,15 @@ module.exports={
                 'common':'@/common',
                 'network':'@/network'
             }
-        }
+        },
+        plugins: [
+            new webpack.ProvidePlugin({
+                $: 'jquery',
+                jQuery: 'jquery',
+                'window.jQuery': 'jquery',
+                Popper: ['popper.js', 'default']
+              })
+        ]
     },
     devServer: { port: 8083} //设置端口
 }
