@@ -1,35 +1,57 @@
 <template>
-    <div class="">
-        <div class="article-item d-flex p-2">
-            <div class="flex-1">
+    <div class="container">
+        <div class="article-item row p-2">
+            <div class="col-10"  :class="{'col-12':articleInfo.img==null}">
                 <div class="d-flex fs-xs text-grey-light">
-                    <span>作者·</span>
-                    <span>时间·</span>
-                    <span>分类</span>
+                    <span>{{articleInfo.message.auth}}·</span>
+                    <span>{{articleInfo.message.createdAt | date}}·</span>
+                    <span>{{articleInfo.message.categories}}</span>
                 </div>
-                <h3 class="text-ellipsis my-1" style="width:40vw">我是标题我是标题我是标题是标题我是标题我是标题我是标题我是标题我是标题我是标是标题我是标题我是标题我是标题我是标题我是标题我是标是标题我是标题我是标题我是标题我是标题我是标题我是标我是标题我是标题我是标题我是标题</h3>
+                <h5  class="InfoTitle cursor-point text-ellipsis my-1 w-100 InfoTitle">{{articleInfo.title}}</h5>
                 <div class="d-flex text-grey-light">
-                    <i class="">赞</i>
-                    <i>评论</i>
-                    <i>分享</i>
+                    <div>
+                        <svg class="icon fs-xl" aria-hidden="true">
+                          <use xlink:href="#icon-zan"></use>
+                        </svg>
+                        <span class="ml-1 mr-3 fs-sm">{{articleInfo.likes}}人喜欢</span>
+                    </div>
+                    <div>
+                        <svg class="icon" aria-hidden="true">
+                          <use xlink:href="#icon-pinglun"></use>
+                        </svg>
+                        <span class="ml-1 mr-3 fs-sm">{{articleInfo.comments}}条评论</span>
+                    </div>
+                    <div>
+                        <svg class="icon" aria-hidden="true">
+                          <use xlink:href="#icon-fenxiang"></use>
+                        </svg>
+                        <span class="ml-1 mr-3 fs-sm">分享</span>
+                    </div>
                 </div>
             </div>
-            <div class="info-img ai-stretch m-1">
-                
-            </div>
+            <div class="info-img ai-stretch p-1 col-2"
+            :style="{'background-image':`url(${articleInfo.img})`}"
+             v-if="articleInfo.img!=null"></div>
         </div>
     </div>
 </template>
 
 <script>
     export default {
-        data(){
-            return {
-                articleInfo:{
-                    
+        props:{
+            articleInfo:{
+                type:Object,
+                default(){
+                    return {
+                        title:null,
+                        message:{},
+                        img:null,
+                        likes:0,
+                        comments:0
+                    }
                 }
             }
-        }
+        },
     }
 </script>
 
@@ -39,8 +61,16 @@
     }
     .info-img{
         width: 4rem;
-        background-image: url(https://pic4.zhimg.com/c4ebd58f385dee6dc0dbf4c2c91a1d62_im.jpg);
+        // background-image: url(https://pic4.zhimg.com/c4ebd58f385dee6dc0dbf4c2c91a1d62_im.jpg);
         background-repeat: no-repeat;
         background-size: 100%;
+    }
+    .InfoTitle{
+        font-weight: bolder;
+        cursor: pointer;
+    }
+    .InfoTitle:hover{
+        transition: 200ms;
+        color: rgb(203, 56, 55);
     }
 </style>

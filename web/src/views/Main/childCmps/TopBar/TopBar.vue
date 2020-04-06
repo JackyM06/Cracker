@@ -2,7 +2,7 @@
     <div class="tob-bar bg-white box-s">
         <!-- lg终端及以上设备应用该导航 -->
         <div class="d-none d-lg-block">
-            <div class="d-flex container" style="height:53px">
+            <div class="d-flex container px-0" style="height:53px">
                  <img src="~assets/img/logo.png" class="cursor-point" 
                     @click="$router.push('/')"
                      style="width:auto;height:53px" alt="">
@@ -28,7 +28,7 @@
         </div>
         <!-- lg以下终端设备应用该导航 -->
         <div class="d-block d-lg-none">
-            <div class="container">
+            <div class="container px-0">
                 <nav class="navbar navbar-expand-lg navbar-light d-flex align-items-center">
                     <img src="~assets/img/logo.png" class="navbar-brand cursor-point p-0" 
                     @click="$router.push('/')"
@@ -125,6 +125,7 @@
     opacity: 0.8;
 }
 .tob-bar{
+    z-index: 999;
     position: sticky;
     top: 0;
 }
