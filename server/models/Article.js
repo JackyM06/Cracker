@@ -17,7 +17,7 @@ const schame = new mongoose.Schema({
             resp_user:{type:mongoose.SchemaTypes.ObjectId,ref:'User'},
             content:{type:String},
             createDate:{type:Date},
-            assist_count:{type:Number,default:0}
+            assist_count:{type:Number,default:0},
         }]
     }],
     supporters:[{

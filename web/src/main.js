@@ -16,6 +16,11 @@ import './assets/scss/style.scss'
 
 import './assets/iconfont/iconfont'
 
+// 引入mavon-editor
+import { mavonEditor } from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+Vue.component('mavonEditor',mavonEditor)
+
 import dayjs from 'dayjs'
 Vue.mixin({
   filters:{
@@ -32,6 +37,17 @@ Vue.mixin({
         }
         return dayjs(e).format(format)
     }
+  },
+  methods: {
+    debounce(fnc,delay){
+      let timer = null
+      return function(...args){
+          if(timer) clearTimeout(timer)
+          timer = setTimeout(()=>{
+              fnc.apply(this,...args)
+          },delay)
+      }
+    } 
   }
 })
 

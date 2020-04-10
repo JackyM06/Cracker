@@ -1,7 +1,9 @@
 <template>
     <div>
         <top-bar></top-bar>
-        <router-view class="container"></router-view>
+        <keep-alive include="Home">
+            <router-view :key="$route.path" class="container"></router-view>
+        </keep-alive>
     </div>
 </template>
 

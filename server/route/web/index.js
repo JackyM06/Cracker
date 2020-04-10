@@ -6,9 +6,23 @@ module.exports = app => {
 
     router.get('/page',async(req,res)=>{
         const PageSize = 20
+        const Categories =req.query.categories?JSON.parse(req.query.categories):[]
         const current = parseInt(req.query.current)
-        const data = await req.Model.find().skip(current*PageSize).limit(PageSize)
+        /**
+         * 待解决，如果当Categories为空时万能匹配categories
+         */
+        const data = await req.Model.find(req.query.categories?{
+            categories:{$in:Categories}
+        }:null).skip(current*PageSize).limit(PageSize)
         .populate('author').populate('categories')
+        res.send(data)  
+    })
+    
+    router.get('/:id',async(req,res)=>{
+        const data = await req.Model.findById(req.params.id).select('+content')
+        .populate('author').populate('categories').populate('comments.user')
+        .populate('comments.communicates.user')
+        .populate('comments.communicates.resp_user')
         res.send(data)
     })
 

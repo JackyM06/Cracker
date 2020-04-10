@@ -1,7 +1,7 @@
 <template>
     <div class="HomeCmps">
         <div class="row mt-2">
-            <div class="card-s bg-white col-12 col-lg-9">
+            <div class="card-s bg-white col-12 col-lg-9 px-1 px-md-2">
                 <article-item 
                 v-for="(item,key) in infoList" :key="key"
                 :article-info="item"></article-item>
@@ -30,11 +30,15 @@
 
 <script>
     import ArticleItem from 'components/content/ArticleItem/ArticleItem.vue'
+
+    import {ArticleInfo} from 'network/module.js'
     export default {
+        name:"Home",
         data(){
             return{
                 page:0,
                 infoList:[],
+                ScrollTop:0
             }
         },
         components:{
@@ -42,31 +46,11 @@
         },
         methods:{
             async fetchArticleList(){
-                const res =  await this.$http.get('rest/article/page',{params:{current:this.page++}})
+                const res =  await this.$http.get('rest/articles/page',{params:{current:this.page++}})
                 this.infoList.push(...res.data.map(e=>{
-                    return {
-                        message:{
-                            auth:e.author.name,
-                            createdAt:e.createdAt,
-                            categories:e.categories.map(category=>category.name).join('/')
-                        },
-                        title:e.title,
-                        img:null,
-                        likes:e.supporters.length,
-                        comments:e.comments.length,
-                        visits:e.visits
-                    }
+                    return new ArticleInfo(e)
                 }))
             },
-             debounce(fnc,delay){
-                let timer = null
-                return function(...args){
-                    if(timer) clearTimeout(timer)
-                    timer = setTimeout(()=>{
-                        fnc.apply(this,...args)
-                    },delay)
-                }
-            }
         },
         created(){
             this.fetchArticleList()
@@ -76,19 +60,26 @@
                 const ST = document.documentElement.scrollTop || document.body.scrollTop  //当前元素到页面顶部的距离
                 const CH = document.body.clientHeight //当前浏览器可视的高度
                 console.log(CH)
-                if(SH - Math.ceil(CH+ST) < 50){
+                if(SH - Math.ceil(CH+ST) < 100){
                     this.fetchArticleList()
                 }
             },300)
-        }  
+        },
+        beforeRouteLeave(to, from, next){
+            console.log("yes")
+            this.ScrollTop =document.documentElement.scrollTop || document.body.scrollTop
+            console.log(this.ScrollTop)
+            next()
+        },
+        activated(){
+            document.documentElement.scrollTop = this.ScrollTop
+            document.body.scrollTop = this.ScrollTop
+        }
 
     }
 </script>
 
 <style lang="scss" scoped>
-.HomeCmps{
-    position: relative;
-}
 .rightCmps{
     // height: 99px;
     position: sticky;

@@ -59,7 +59,9 @@ a{
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
+.font-weight{
+    font-weight: bold;
+}
 
 
 //flex布局
@@ -133,4 +135,7 @@ a{
 
 .cursor-point{
     cursor: pointer;
+}
+.border-b{
+    border-bottom: 1px solid #f0f2f7;
 }
