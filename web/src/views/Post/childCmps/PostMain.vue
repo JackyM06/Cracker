@@ -19,8 +19,8 @@
             </div>
         </div>
         <!-- 文章标题 -->
-        <div class="px-2 my-3">
-            <h2 class="font-weight">{{Article.title}}</h2>
+        <div class="px-2 my-3 d-inline-block">
+            <h2 class="font-weight d-inline-block">{{Article.title}}</h2>
         </div>
         <!-- 内容 -->
         <mavon-editor

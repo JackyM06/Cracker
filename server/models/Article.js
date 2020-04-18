@@ -11,12 +11,12 @@ const schame = new mongoose.Schema({
         user:{type:mongoose.SchemaTypes.ObjectId,ref:'User'},
         content:{type:String},
         assist_count:{type:Number,default:0},
-        createDate:{type:Date},
+        createDate:{type:Date,default:Date.now},
         communicates:[{
             user:{type:mongoose.SchemaTypes.ObjectId,ref:'User'},
             resp_user:{type:mongoose.SchemaTypes.ObjectId,ref:'User'},
             content:{type:String},
-            createDate:{type:Date},
+            createDate:{type:Date,default:Date.now},
             assist_count:{type:Number,default:0},
         }]
     }],

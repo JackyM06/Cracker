@@ -6,10 +6,10 @@
                     <post-main :article = 'Article'></post-main>
                 </div>
                 <!-- 评论 -->
-                <div class="card-s bg-white mt-2">
+                <div class="card-s mb-2 bg-white mt-2">
                     <h5 class="pl-3 pb-2 pt-3 font-weight" 
                     style="border-bottom: 1px solid #f0f2f7;">评论</h5>
-                    <comments-main :comments = "Article.comments" class="px-3"></comments-main>
+                    <comments-main @editCom="editCom" :id="id" :comments = "Article.comments" class="px-3"></comments-main>
                 </div>
                 <!-- 推荐 -->
                 <div v-if="RecommendList.length>0" class="card-s bg-white mt-2 p-0">
@@ -82,6 +82,9 @@
                 this.RecommendList.push(...res.data.map(e=>{
                     return new ArticleInfo(e)
                 }))
+            },
+            editCom(comment){
+                this.Article.comments = comment
             }
         },
         components:{
