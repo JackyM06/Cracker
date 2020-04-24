@@ -1,5 +1,6 @@
 module.exports = app=>{
     const express = require('express')
+    const xss = require('xss')
     const router =  express.Router({
         mergeParams:true //合并路由参数
     })
@@ -180,6 +181,9 @@ module.exports = app=>{
      * 按id更新文档
      */
     router.put('/:id',async(req,res)=>{
+        // 防止xss攻击
+        if(req.body.title)req.body.title=xss(req.body.title)
+        if(req.body.name)req.body.title=xss(req.body.name)
         const sucess = await req.Model.findByIdAndUpdate(req.params.id,req.body)
         const data = await req.Model.findById(req.params.id).populate('author')
         res.send(data)
@@ -188,7 +192,8 @@ module.exports = app=>{
      * 增加文档
      */
     router.post('/',async(req,res)=>{
-
+        if(req.body.title)req.body.title=xss(req.body.title)
+        if(req.body.name)req.body.title=xss(req.body.name)
         const data = await req.Model.create(req.body)
         res.send(data)
     })

@@ -28,9 +28,6 @@
             CommentInput
         },
         methods:{
-            test(){
-                console.log(123)
-            },
             CommentCom(content){
                 this.commitResp({
                     content

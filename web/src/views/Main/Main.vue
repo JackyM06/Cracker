@@ -2,7 +2,7 @@
     <div>
         <top-bar></top-bar>
         <keep-alive include="Home,category">
-            <router-view :key="$route.path" class="container"></router-view>
+            <router-view :key="$route.path"></router-view>
         </keep-alive>
     </div>
 </template>

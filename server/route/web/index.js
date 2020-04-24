@@ -1,5 +1,6 @@
 module.exports = app => {
     const express = require('express')
+    const mongoose = require("mongoose")
     const router = express.Router({
         mergeParams:true //合并路由参数
     })
@@ -9,14 +10,21 @@ module.exports = app => {
     })
     router.get('/page',async(req,res)=>{
         const PageSize = 20
-        const Categories =req.query.categories?JSON.parse(req.query.categories):[]
-        const current = parseInt(req.query.current)
-        /**
-         * 待解决，如果当Categories为空时万能匹配categories
-         */
-        const data = await req.Model.find(req.query.categories?{
-            categories:{$in:Categories}
-        }:null).skip(current*PageSize).limit(PageSize)
+        const sort = req.query.sort
+        const Categories =req.query.categories?{
+            categories:{$in:JSON.parse(req.query.categories)}
+        }:null //是否限定分类
+        const current = parseInt(req.query.current) || 0
+        const searchOrder = req.query.searchKey?JSON.parse(req.query.searchKey):null
+        for (const key in searchOrder) {
+            if (searchOrder.hasOwnProperty(key)) {
+                searchOrder[key] = new RegExp(searchOrder[key]);   
+            }
+        }
+        const data = await req.Model.find(Categories)
+        .where(searchOrder)
+        .sort({[sort]:-1})
+        .skip(current*PageSize).limit(PageSize)
         .populate('author').populate('categories')
         res.send(data)  
     })
@@ -32,7 +40,6 @@ module.exports = app => {
     // 评论接口
     // 新增评论
     router.put('/:id',async(req,res)=>{
-        console.log(req.body)
         if(req.body.comment_id){
             await req.Model.update({_id:req.params.id,"comments._id":req.body.comment_id},
                 {
@@ -58,4 +65,35 @@ module.exports = app => {
 
     const resourceMiddle = require('../../middlewares/resourceMiddle')
     app.use("/web/api/v1/rest/:resource",resourceMiddle(),router)
+
+    app.get("/web/api/v1/categories/page",async(req,res)=>{
+        const Current = req.query.current || 0
+        const PageSize = 20
+        const searchOrder = req.query.searchKey?JSON.parse(req.query.searchKey):{}
+        for (const key in searchOrder) {
+            if (searchOrder.hasOwnProperty(key)) {
+                searchOrder[key] = new RegExp(searchOrder[key]);   
+            }
+        }
+        const idOrder = req.query.id ? {_id:mongoose.Types.ObjectId(req.query.id)} : null
+        const categories = await require('../../models/Category').aggregate([
+            {
+                $match:{...searchOrder,...idOrder}
+            },
+            {
+                $lookup:{
+                    from:'articles',
+                    localField:'_id',
+                    foreignField:'categories',
+                    as:'count'
+                }
+            },
+            {
+                $addFields:{
+                    count:{$size:['$count']}
+                }
+            },
+        ]).skip(Current*PageSize).limit(PageSize)
+        res.send(categories)
+    })
 }

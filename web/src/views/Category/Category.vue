@@ -1,10 +1,12 @@
 <template>
-    <div class="container bg-white box-s">
-        <h3 class="text-center py-5">分类</h3>
-        <div class="row">
-            <category-item v-for="(item,key) in categories" :key="key"
-            :category="item"
-            ></category-item>
+    <div>
+        <h3 class="bg-white-gray text-center py-3 py-md-5 text-gray-sl font-weight" >分类</h3>
+        <div class="container bg-white box-s my-0">
+            <div class="row py-3">
+                <category-item v-for="(item,key) in categories" :key="key"
+                :category="item"
+                ></category-item>
+            </div>
         </div>
     </div>
 </template>
@@ -25,7 +27,7 @@
         },
         methods:{
             async fetchCategories(){
-                const res = await this.$http.get('rest/categories/page',{params:{
+                const res = await this.$http.get('categories/page',{params:{
                     current:this.page++
                 }})
                 this.categories.push(...res.data)

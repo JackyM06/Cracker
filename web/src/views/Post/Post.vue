@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div class="container">
         <div class="row mt-0 mt-md-2">
             <div class="col-12 col-lg-9">
                 <div class="card-s bg-white  p-2 p-lg-3">
-                    <post-main :article = 'Article'></post-main>
+                    <post-main class="PostMain" :article = 'Article'></post-main>
                 </div>
                 <!-- 评论 -->
                 <div class="card-s mb-2 bg-white mt-2">
@@ -18,20 +18,10 @@
                     <article-item 
                     v-for="(item,key) in RecommendList" :key="key"
                     :article-info="item"></article-item>
-                    <p class="text-center text-grey-light fs-sm py-2">我也是有底线的~（￣︶￣）↗</p>
+                    <under-line></under-line>
                 </div>
             </div>
-            <div class="d-none d-lg-block col-lg-3  pl-2">
-                <div class="bg-white card-s p-5 mb-2">
-                    <span>作者信息</span>
-                    <span>测试</span>
-                    <span>测试</span>
-                </div>
-                <div class="bg-white card-s  p-5 mb-2">
-                    <span>测试2</span>
-                    <span>测试</span>
-                    <span>测试</span>
-                </div>
+            <div class="Right d-none d-lg-block col-lg-3  pl-2">
                 <div class="bg-white rightCmps card-s p-5 mb-2">
                     <span>测试3</span>
                     <span>测试</span>
@@ -45,11 +35,13 @@
 <script>
 
     import ArticleItem from 'components/content/ArticleItem/ArticleItem.vue'
+    import UnderLine from 'components/content/UnderLine/UnderLine.vue'
 
     import PostMain from './childCmps/PostMain.vue'
     import CommentsMain from './childCmps/CommentsMain.vue'
 
     import {ArticleInfo} from 'network/module.js'
+
 
 
     export default {
@@ -90,7 +82,8 @@
         components:{
             PostMain,
             ArticleItem,
-            CommentsMain
+            CommentsMain,
+            UnderLine
         },
         async created(){
             await this.fetchArticle()
@@ -109,5 +102,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+    .rightCmps{
+        z-index: -1;
+    }
 </style>

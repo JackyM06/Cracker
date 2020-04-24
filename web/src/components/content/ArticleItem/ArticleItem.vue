@@ -1,15 +1,19 @@
 <template>
     <div class="container">
         <div class="article-item row py-1 px-0 px-md-1">
+            
             <div class="col-10"  :class="{'col-12':articleInfo.img==null}">
                 <div class="d-flex fs-xs text-grey-light">
                     <span>{{articleInfo.message.auth}}·</span>
                     <span>{{articleInfo.message.createdAt | date}}·</span>
                     <span>{{articleInfo.message.categories}}</span>
                 </div>
-                <h5  
+                <h5
                 @click="clickTitle"
-                class="InfoTitle cursor-point text-ellipsis my-1 w-100 InfoTitle">{{articleInfo.title}}</h5>
+                class="InfoTitle cursor-point text-ellipsis my-1 w-100 InfoTitle">
+                <slot></slot>
+                <span v-html="articleInfo.title"></span>
+                </h5>
                 <div class="d-flex text-grey-light">
                     <div>
                         <svg class="icon fs-xl" aria-hidden="true">

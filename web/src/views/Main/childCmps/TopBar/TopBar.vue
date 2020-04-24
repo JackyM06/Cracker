@@ -13,16 +13,22 @@
                 </div>
                 <div class="py-1 nav-item" >
                     <input class="search-box bg-light px-1 text-grey" 
-                    maxlength="15"
+                    maxlength="15" v-model="searchKey" 
+                    @keyup.enter="search()"
                     placeholder="搜索内容" type="text">
-                    <button class="search-btn px-2 cursor-point">搜索</button>
+                    <button  class="search-btn px-2 cursor-point"
+                    @click="search()"
+                    >搜索</button>
                 </div>
                 <div class="py-1 px-3 flex-1 nav-item">
                     <router-link tag="button" class="bg-red btn cursor-point" to="">写文章</router-link>
                 </div>
-                <div class="py-1">
+                <div v-if="!user" class="py-1">
                     <button class="nav-item btn bg-grey cursor-point">登录</button>
                     <button class="nav-item btn bg-black ml-2 cursor-point">加入</button>
+                </div>
+                <div v-else>
+                    <button>我是已登录</button>
                 </div>
             </div>
         </div>
@@ -35,9 +41,10 @@
                      style="width:auto;height:53px" alt="">
                     <div class="py-1 d-none d-md-block" style="height:53px">
                         <input class="search-box bg-light px-1 text-grey" 
-                        maxlength="15"
+                        maxlength="15" v-model="searchKey" 
+                         @keyup.enter="$router.push(`/search/${searchKey}`)"
                         placeholder="搜索内容" type="text">
-                        <button class="search-btn px-2 cursor-point">搜索</button>
+                        <button @click="$router.push(`/search/${searchKey}`)" class="search-btn px-2 cursor-point">搜索</button>
                     </div>
                     <button class="navbar-toggler" data-toggle="collapse" data-target="#menu">
                         <span class="navbar-toggler-icon"></span>
@@ -46,9 +53,11 @@
                         <ul class="navbar-nav">
                             <div class="py-1 nav-item d-block d-md-none">
                                 <input class="search-box bg-light p-1 text-grey" 
-                                maxlength="15"
+                                maxlength="15" v-model="searchKey" 
                                 placeholder="搜索内容" type="text">
-                                <button class="btn px-2 bg-black cursor-point">搜索</button>
+                                <button
+                                @click="$router.push(`/search/${searchKey}`)"
+                                class="btn px-2 bg-black cursor-point">搜索</button>
                             </div>
                             <li class="nav-item"><a href="/home" class="nav-link">首页</a></li>
                             <li class="nav-item"><a href="/categories" class="nav-link">分类</a></li>
@@ -66,7 +75,23 @@
 
 <script>
     export default {
-        
+        data(){
+            return {
+                user:localStorage.cracker,
+                searchKey:this.$route.params.searchkey || ""
+            }
+        },
+        methods:{
+            search(){
+                this.searchKey = this.searchKey.trim()
+                if(this.searchKey === ""){
+                    alert("请输入要搜索的内容！")
+                }else{
+                    this.$router.push(`/search/${this.searchKey}`)
+                }
+            }
+        }
+
     }
 </script>
 

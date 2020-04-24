@@ -6,7 +6,7 @@
              @show="console.log('tet')"
              @blur="$emit('blur')"
              >
-        <button class="ml-1 border-radius px-3 py-1 bg-red" @click="$emit('commit',content)">评论</button>
+        <button class="ml-1 border-radius px-3 py-1 bg-red" @click="$emit('commit',content);content=''">评论</button>
     </div>
     </div>
 </template>

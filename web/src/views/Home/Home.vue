@@ -1,5 +1,5 @@
 <template>
-    <div class="HomeCmps">
+    <div class="HomeCmps container">
         <div class="row mt-2">
             <div class="card-s bg-white col-12 col-lg-9 px-1 px-md-2">
                 <article-item 
@@ -59,14 +59,12 @@
                 const SH = document.body.scrollHeight //获取当前页面总长度
                 const ST = document.documentElement.scrollTop || document.body.scrollTop  //当前元素到页面顶部的距离
                 const CH = document.body.clientHeight //当前浏览器可视的高度
-                console.log(CH)
                 if(SH - Math.ceil(CH+ST) < 100){
                     this.fetchArticleList()
                 }
             },300)
         },
         beforeRouteLeave(to, from, next){
-            console.log("yes")
             this.ScrollTop =document.documentElement.scrollTop || document.body.scrollTop
             console.log(this.ScrollTop)
             next()

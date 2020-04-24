@@ -69,11 +69,6 @@
 </script>
 
 <style lang="scss">
-    .avatar{
-        width: 55px;
-        height: auto;
-        border-radius: 50%;
-    }
     .followBtn{
         border: 1px solid rgb(203, 56, 55);
         background-color: white;
