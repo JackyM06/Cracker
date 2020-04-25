@@ -38,7 +38,7 @@
             <div class="d-flex pl-2 pl-md-3">
                 <div v-for="(item,key) in Article.categories" :key="key" 
                 class="pr-2 pt-1 cursor-point"
-                @click="$router.push('/')"
+                @click="$router.push(`/tag/${item._id}`)"
                 >
                     <img :src="item.img" style="width:20px;height:20px" alt="">
                     <span class= "text-grey-light fs-sm p-2">{{item.name}}</span>
@@ -69,15 +69,6 @@
 </script>
 
 <style lang="scss">
-    .followBtn{
-        border: 1px solid rgb(203, 56, 55);
-        background-color: white;
-        border-radius: 3px;
-    }
-    .followBtn:hover{
-        color: white;
-        background-color: rgb(203, 56, 55);
-    }
     .mk-content{
         position: relative!important;
         z-index: 0!important;

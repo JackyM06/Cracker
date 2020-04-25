@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex mb-2 cursor-point">
+    <div class="d-flex mb-2 cursor-point" @click="$router.push(`/tag/${category._id}`)">
         <img :src="category.img" style="width:50px" alt="">
         <div class="flex-1 d-flex flex-column justify-content-between p-1">
             <span class="fs-sm font-weight" v-html="category.name"></span>

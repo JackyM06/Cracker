@@ -11,6 +11,7 @@ const routes = [
             { path: 'search/:searchkey', component: ()=>import('views/Search/Search.vue'),props:true},
             { path: '', redirect: '/home'},
         ]
-    }
+    },
+    { path: '/editor', component: ()=>import('views/Editor/Editor.vue') },
 ]
 export default routes

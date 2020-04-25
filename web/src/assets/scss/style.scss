@@ -149,3 +149,12 @@ a{
     height: 55px;
     border-radius: 50%;
 }
+.followBtn{
+    border: 1px solid rgb(203, 56, 55);
+    background-color: white;
+    border-radius: 3px;
+}
+.followBtn:hover{
+    color: white;
+    background-color: rgb(203, 56, 55);
+}
