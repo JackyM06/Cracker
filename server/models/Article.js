@@ -24,7 +24,8 @@ const schame = new mongoose.Schema({
         user:{type:mongoose.SchemaTypes.ObjectId,ref:'User'},
         time:{type:Date}
     }],
-    visits:{type:Number,default:0}
+    visits:{type:Number,default:0},
+    type:{type:String,default:"private"} //public 、 private
 },{
     timestamps:true
 })

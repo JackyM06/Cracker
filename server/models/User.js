@@ -10,6 +10,7 @@ const sechma = new mongoose.Schema({
     fans_size:{type:Number,default:0},
     followers_size:{type:Number,default:0},
     articles_size:{type:Number,default:0},
+    categories:[{type:mongoose.SchemaTypes.ObjectId,ref:"Category"}],
     password:{
         type:String,
         select:false,

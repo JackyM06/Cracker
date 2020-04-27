@@ -9,9 +9,11 @@ const routes = [
             { path: 'hot', component: ()=>import('views/Hot/Hot.vue') },
             { path: 'post/:id', component: ()=>import('views/Post/Post.vue'),props:true},
             { path: 'search/:searchkey', component: ()=>import('views/Search/Search.vue'),props:true},
+            { path: 'editor/drafts', component: ()=>import('views/Drafts/Drafts.vue')},
             { path: '', redirect: '/home'},
         ]
     },
-    { path: '/editor', component: ()=>import('views/Editor/Editor.vue') },
+    { path: '/editor/new', component: ()=>import('views/Editor/Editor.vue')},
+    { path: '/editor/:id', component: ()=>import('views/Editor/Editor.vue'),props:true},
 ]
 export default routes

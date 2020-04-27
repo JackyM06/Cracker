@@ -2,10 +2,14 @@
     <div>
        <div class="w-100 input d-flex bg-white border-b align-items-center px-3">
             <input type="text" maxlength="80" class=" flex-1 titleInput px-2" 
-            v-model="Article.title" placeholder="输入文章标题...">
-            <div class="text-grey-light">
-                <span class="d-none d-md-inline-block">文章将会自动保存至</span>
-                <button class="btn text-grey-light py-1 px-2 fs-sm ml-3" style="border-color:#f0f2f7">草稿</button>
+            v-model="Article.title" placeholder="输入文章标题..." @input="editorChange">
+            <div class="text-grey-light d-flex align-items-center">
+                <span class="d-none d-md-flex flex-column">
+                    <span >{{message}}</span>
+                    <span v-if="message == '已自动保存至'" class="fs-xxs text-right">{{Article.updatedAt | date}}</span>
+                </span>
+                <button class="btn text-grey-light py-1 px-2 fs-sm ml-3" 
+                style="border-color:#f0f2f7" @click="$router.push(`/editor/drafts`)">草稿</button>
             </div>
             <div class="position-relative mx-3">
                <button class="text-red bg-white border-0" style="outline:none"
@@ -14,20 +18,9 @@
                         <use xlink:href="#icon-sanjiaoxing"></use>
                     </svg>
                </button>
-               <panel v-show="publish" class="bg-white mt-3" style="width:300px">
-                   <div class="px-3 py-4  text-grey-light">
-                       <h5 class="font-weight">发布文章</h5>
-                       <div class="mt-2">
-                           <span>分类</span>
-                       </div>
-                       <div class="mt-2">
-                           <span>更多分类</span>
-                       </div>
-                       <div class="text-center mt-2">
-                           <button class="followBtn fs-sm text-red px-2 py-1">确定并发布</button>
-                       </div>
-                   </div>
-               </panel>
+                <category-choice v-show="publish" @Public="Public()"
+                :categoriesDefalut="Article.categories"
+                @CateChange="CateChange"></category-choice>
             </div>
             <div>
                 <img src="http://localhost:3000/uploads/9360cdb34be562d7f3a1899c57f3ba99" style="width:30px;height:30px" alt="">
@@ -35,22 +28,31 @@
        </div>
         <mavon-editor
             class="editor-body" style="z-index:1"
-            v-model="Article.content"
-            :toolbars = "toolbars"
+            v-model="Article.content" @change="editorChange" @save="autoSave"
+            @imgAdd="imgAdd" ref="mavon"
+            :toolbars = "toolbars" placeholder="开始编辑文章..."
         ></mavon-editor>
     </div>
 </template>
 
 <script>
-    import Panel from 'components/content/Panel/Panel.vue'
+    import CategoryChoice from './childCmps/CategoryChoice.vue'
+
     export default {
+        props:{
+            id:String
+        },
         data () {
             return {
                 Article:{
                     content:"",
-                    title:""
+                    title:"",
+                    categories:[]
                 },
                 publish:false,
+                message:"文章将会自动保存至",
+                lazy:null,
+                onceFlag:true,
                 toolbars: {
                     bold: true, // 粗体
                     italic: true, // 斜体
@@ -85,16 +87,73 @@
                     /* 2.2.1 */
                     subfield: true, // 单双栏模式
                     preview: true, // 预览
-                }
+                },
+               
             }
         },
         methods:{
             publishClick(){
                 this.publish = !this.publish
+            },
+            async autoSave(){  
+                if(this.Article.title != '' && this.Article.content != ''){
+                    this.message = "文章正在自动保存..."
+                    let res = null
+                    if(!this.id) res = await this.$http.post('articles/new',this.Article) 
+                    else {
+                        res = await this.$http.put(`articles/${this.id}`,this.Article)
+                        this.fetchArticle()
+                    }
+                    if(res.data ){
+                        this.message = '已自动保存至'
+                        if(res.data[0])  this.$router.replace(`/editor/${res.data[0]['_id']}`)
+                        else if(res.data.ok != 1){
+                            this.message = "保存出错"
+                            this.$router.replace('/editor/new')
+                        }
+                    }
+                } 
+            },
+            editorChange(){
+                console.log("zx")
+                if(this.onceFlag){
+                     this.onceFlag = false
+                     return
+                }else{
+                    if(this.lazy) clearTimeout(this.lazy)
+                    this.lazy = setTimeout(this.autoSave,2000)
+                }
+                
+                // this.debounce(this.autoSave,1000)
+            },
+            async fetchArticle(){
+                if(this.id){
+                    const res = await this.$http.get(`articles/${this.id}`)
+                    this.Article = res.data
+                }
+            },
+            async imgAdd(pos, $file){
+                var formdata = new FormData()
+                formdata.append('file', $file)
+                const res = await this.$http.post('upload',formdata)
+                this.$refs.mavon.$img2Url(pos,res.data.url)
+            },
+            CateChange(categories){
+                this.Article.categories = categories
+                this.editorChange()
+            },
+            Public(){
+                this.Article.type = 'public'
+                this.autoSave()
+                this.$router.push('/')
             }
+
         },
         components:{
-            Panel
+            CategoryChoice
+        },
+        created(){
+            this.fetchArticle()
         }
     }
 </script>

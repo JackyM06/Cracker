@@ -4,12 +4,14 @@ module.exports = app => {
     const router = express.Router({
         mergeParams:true //合并路由参数
     })
-
+    // router.get('/init',async(req,res)=>{
+    //     res.send(await req.Model.updateMany(null,{type:'public'}))
+    // })
     router.get('/',async(req,res)=>{
         res.send(await req.Model.find())
     })
     router.get('/page',async(req,res)=>{
-        const PageSize = 20
+        const PageSize =Math.min(req.query.pageSize || 20 ,20)  
         const sort = req.query.sort
         const Categories =req.query.categories?{
             categories:{$in:JSON.parse(req.query.categories)}
@@ -21,7 +23,7 @@ module.exports = app => {
                 searchOrder[key] = new RegExp(searchOrder[key]);   
             }
         }
-        const data = await req.Model.find(Categories)
+        const data = await req.Model.find({type:'public',...Categories})
         .where(searchOrder)
         .sort({[sort]:-1})
         .skip(current*PageSize).limit(PageSize)
@@ -30,7 +32,10 @@ module.exports = app => {
     })
     
     router.get('/:id',async(req,res)=>{
-        const data = await req.Model.findById(req.params.id).select('+content')
+        // console.log(req.params.id)
+        const data = await req.Model.findById(req.params.id)
+        .where(req.ModelName == "Article"?{type:'public'}:null)
+        .select('+content')
         .populate('author').populate('categories').populate('comments.user')
         .populate('comments.communicates.user')
         .populate('comments.communicates.resp_user')
@@ -66,34 +71,19 @@ module.exports = app => {
     const resourceMiddle = require('../../middlewares/resourceMiddle')
     app.use("/web/api/v1/rest/:resource",resourceMiddle(),router)
 
-    app.get("/web/api/v1/categories/page",async(req,res)=>{
-        const Current = req.query.current || 0
-        const PageSize = 20
-        const searchOrder = req.query.searchKey?JSON.parse(req.query.searchKey):{}
-        for (const key in searchOrder) {
-            if (searchOrder.hasOwnProperty(key)) {
-                searchOrder[key] = new RegExp(searchOrder[key]);   
-            }
-        }
-        const idOrder = req.query.id ? {_id:mongoose.Types.ObjectId(req.query.id)} : null
-        const categories = await require('../../models/Category').aggregate([
-            {
-                $match:{...searchOrder,...idOrder}
-            },
-            {
-                $lookup:{
-                    from:'articles',
-                    localField:'_id',
-                    foreignField:'categories',
-                    as:'count'
-                }
-            },
-            {
-                $addFields:{
-                    count:{$size:['$count']}
-                }
-            },
-        ]).skip(Current*PageSize).limit(PageSize)
-        res.send(categories)
+    app.use("/web/api/v1/categories",require('./Categories'))
+
+    app.use("/web/api/v1/articles",(req,res,next)=>{
+        req.user = {_id:'5e6c8193ee0d280fc02505c6'}
+        next()
+    },require('./Articles'))
+
+    // 图片上传
+    const multer = require('multer')
+    const upload = multer({ dest: __dirname + '../../../uploads' })
+    app.post('/web/api/v1/upload',upload.single('file'),async(req,res)=>{
+        const file = req.file
+        file.url = `http://localhost:3000/uploads/${file.filename}`
+        res.send(file)
     })
 }

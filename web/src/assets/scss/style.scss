@@ -158,3 +158,11 @@ a{
     color: white;
     background-color: rgb(203, 56, 55);
 }
+.InfoTitle{
+    font-weight: bolder;
+    cursor: pointer;
+}
+.InfoTitle:hover{
+    transition: 200ms;
+    color: rgb(203, 56, 55);
+}

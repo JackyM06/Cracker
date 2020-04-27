@@ -21,7 +21,7 @@
                     >搜索</button>
                 </div>
                 <div class="py-1 px-3 flex-1 nav-item">
-                    <router-link tag="button" class="bg-red btn cursor-point" to="/editor">写文章</router-link>
+                    <router-link tag="button" class="bg-red btn cursor-point" to="/editor/new">写文章</router-link>
                 </div>
                 <div v-if="!user" class="py-1">
                     <button class="nav-item btn bg-grey cursor-point">登录</button>

@@ -10,9 +10,9 @@
                 </div>
                 <h5
                 @click="clickTitle"
-                class="InfoTitle cursor-point text-ellipsis my-1 w-100 InfoTitle">
+                class="text-ellipsis my-1 w-100">
                 <slot></slot>
-                <span v-html="articleInfo.title"></span>
+                <span class="InfoTitle cursor-point" v-html="articleInfo.title"></span>
                 </h5>
                 <div class="d-flex text-grey-light">
                     <div>
@@ -69,12 +69,5 @@
         background-repeat: no-repeat;
         background-size: 100%;
     }
-    .InfoTitle{
-        font-weight: bolder;
-        cursor: pointer;
-    }
-    .InfoTitle:hover{
-        transition: 200ms;
-        color: rgb(203, 56, 55);
-    }
+
 </style>
