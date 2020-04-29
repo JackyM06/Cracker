@@ -17,7 +17,7 @@
             }
         },
         methods:{
-            ChoiceClick(){                
+            ChoiceClick(){  //监听当前分类是否被点击，提交选中/取消选中事件               
                 this.choice = !this.choice
                 if(this.choice)this.$emit('Choice')
                 else this.$emit("disChoice")

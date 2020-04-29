@@ -4,9 +4,7 @@ module.exports = app => {
     const router = express.Router({
         mergeParams:true //合并路由参数
     })
-    // router.get('/init',async(req,res)=>{
-    //     res.send(await req.Model.updateMany(null,{type:'public'}))
-    // })
+
     router.get('/',async(req,res)=>{
         res.send(await req.Model.find())
     })
@@ -19,11 +17,12 @@ module.exports = app => {
         const current = parseInt(req.query.current) || 0
         const searchOrder = req.query.searchKey?JSON.parse(req.query.searchKey):null
         for (const key in searchOrder) {
-            if (searchOrder.hasOwnProperty(key)) {
+            if (searchOrder.hasOwnProperty(key) && (key != 'author')) {
                 searchOrder[key] = new RegExp(searchOrder[key]);   
             }
         }
-        const data = await req.Model.find({type:'public',...Categories})
+        const article = req.ModelName == "Article"?{type:'public'}:null
+        const data = await req.Model.find({...article,...Categories})
         .where(searchOrder)
         .sort({[sort]:-1})
         .skip(current*PageSize).limit(PageSize)
@@ -32,13 +31,23 @@ module.exports = app => {
     })
     
     router.get('/:id',async(req,res)=>{
-        // console.log(req.params.id)
-        const data = await req.Model.findById(req.params.id)
+        let data = await req.Model.findById(req.params.id)
         .where(req.ModelName == "Article"?{type:'public'}:null)
         .select('+content')
         .populate('author').populate('categories').populate('comments.user')
         .populate('comments.communicates.user')
-        .populate('comments.communicates.resp_user')
+        .populate('comments.communicates.resp_user').lean()
+        if(req.user._id){
+            if(req.user._id == data._id){
+                data.canEdit = true
+            }else if( data.author && data.author._id == data.canEdit ){
+                data.canEdit = true
+            }else{
+                data.canEdit = false
+            }
+        }else{
+            data.canEdit = false
+        }
         res.send(data)
     })
 
@@ -69,7 +78,10 @@ module.exports = app => {
     })
 
     const resourceMiddle = require('../../middlewares/resourceMiddle')
-    app.use("/web/api/v1/rest/:resource",resourceMiddle(),router)
+    app.use("/web/api/v1/rest/:resource",(req,res,next)=>{
+        req.user = {_id:'5e6c8193ee0d280fc02505c6'}
+        next()
+    },resourceMiddle(),router)
 
     app.use("/web/api/v1/categories",require('./Categories'))
 
@@ -77,6 +89,11 @@ module.exports = app => {
         req.user = {_id:'5e6c8193ee0d280fc02505c6'}
         next()
     },require('./Articles'))
+
+    app.use("/web/api/v1/users",(req,res,next)=>{
+        req.user = {_id:'5e6c8193ee0d280fc02505c6'}
+        next()
+    },require('./Users'))
 
     // 图片上传
     const multer = require('multer')

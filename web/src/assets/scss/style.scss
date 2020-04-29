@@ -10,8 +10,9 @@ html{
     height: 100%;
 }
 h1,p{
-    margin: 0;
+    margin: 0;    
 }
+
 body{
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
@@ -149,6 +150,11 @@ a{
     height: 55px;
     border-radius: 50%;
 }
+.MaxAvatar{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
 .followBtn{
     border: 1px solid rgb(203, 56, 55);
     background-color: white;
@@ -165,4 +171,22 @@ a{
 .InfoTitle:hover{
     transition: 200ms;
     color: rgb(203, 56, 55);
+}
+
+.isNull{
+    filter: grayscale(100%);
+}
+
+.split{
+    display: inline-block;
+    width: 1px;
+    height: 10px;
+    margin: 0 6px;
+    border-right: 1px solid #e1e1e1;
+}
+.rightCmps{
+    // height: 99px;
+    position: sticky;
+    top: 61px;
+    z-index: 999;
 }

@@ -10,6 +10,7 @@ const routes = [
             { path: 'post/:id', component: ()=>import('views/Post/Post.vue'),props:true},
             { path: 'search/:searchkey', component: ()=>import('views/Search/Search.vue'),props:true},
             { path: 'editor/drafts', component: ()=>import('views/Drafts/Drafts.vue')},
+            { path: 'profile/:id', component: ()=>import('views/Profile/Profile.vue'),props:true},
             { path: '', redirect: '/home'},
         ]
     },

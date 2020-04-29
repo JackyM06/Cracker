@@ -42,11 +42,11 @@
 <script>
     import ArticleItem from 'components/content/ArticleItem/ArticleItem.vue'
     import UnderLine from 'components/content/UnderLine/UnderLine.vue'
-    import LoadMore from '../../components/content/UnderLine/LoadMore.vue'
+    import LoadMore from 'components/content/UnderLine/LoadMore.vue'
     import Card from 'components/content/Card/Card.vue'
-
+    import CateItem from 'components/content/CategoryItem/CateItem.vue'
+    
     import UserItem from './childCpms/UserItem.vue'
-    import CateItem from './childCpms/CateItem.vue'
 
     import {ArticleInfo} from 'network/module.js'
 

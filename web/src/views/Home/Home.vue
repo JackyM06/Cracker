@@ -46,7 +46,12 @@
         },
         methods:{
             async fetchArticleList(){
-                const res =  await this.$http.get('rest/articles/page',{params:{current:this.page++}})
+                const res =  await this.$http.get('rest/articles/page',{
+                    params:{
+                        current:this.page++,
+                        sort:'updatedAt'
+                    }
+                })
                 this.infoList.push(...res.data.map(e=>{
                     return new ArticleInfo(e)
                 }))

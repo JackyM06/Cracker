@@ -3,15 +3,16 @@
         <!-- 文章头部 -->
         <div class="d-flex align-items-center my-2 px-2">
             <div>
-                <img class="avatar" :src="Article.author.avatar" alt="">
+                <img class="avatar cursor-point" @click="pushProfile" :src="Article.author.avatar" alt="">
             </div>
             <div class="flex-1 mx-2">
-                <h6 style="font-weight:bolder">{{Article.author.name}}</h6>
+                <h6 style="font-weight:bolder" class="cursor-point" @click="pushProfile">{{Article.author.name}}</h6>
                 <div class="fs-sm text-grey-light">
                     <span class="mr-2">发布于 {{Article.createdAt | date}}</span>
                     <span v-if="Article.createdAt!=Article.updatedAt" class="mr-2">更新 {{Article.updatedAt | date(Article.createdAt)}}</span>
                     <span class="mr-1">阅读</span>
-                    <span>{{Article.visits}}</span>
+                    <span class="mr-1">{{Article.visits}}</span>
+                    <span v-if="Article.canEdit" @click="pushEdit" class="text-red">编辑</span>
                 </div>
             </div>
             <div>
@@ -51,7 +52,7 @@
 <script>
     export default {
         props:{
-            Article:Object
+            Article:Object,
         },
         computed:{
             prop () {
@@ -63,6 +64,14 @@
                   scrollStyle: true
                 }
                 return data
+            },
+        },
+        methods:{
+            pushProfile(){
+                this.$router.push(`/profile/${this.Article.author._id}`)
+            },
+            pushEdit(){
+                this.$router.push(`/editor/${this.Article._id}`)
             }
         }
     }

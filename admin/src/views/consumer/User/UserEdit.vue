@@ -11,6 +11,10 @@
                     <el-form-item label="用户头像">
                         <img-upload @success="url=>model.avatar=url" :img-src="model.avatar"></img-upload>
                     </el-form-item>
+                    <el-form-item label="所属职位">
+                       <el-input v-model="model.position" 
+                       style="width:50%;min-width:200px;" maxlength="20" show-word-limit></el-input>
+                    </el-form-item>
                     <el-form-item label="所在公司">
                        <el-input v-model="model.company" 
                        style="width:70%;min-width:300px;" maxlength="40" show-word-limit></el-input>
@@ -18,6 +22,18 @@
                     <el-form-item label="个人简介">
                         <el-input v-model="model.introduction" type="textarea"
                       :rows="4"  style="width:40%;min-width:200px;" class="fs-xl" maxlength="120"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Github">
+                       <el-input v-model="model.link.github" type="url"
+                       style="width:50%;min-width:200px;" maxlength="40" show-word-limit></el-input>
+                    </el-form-item>
+                    <el-form-item label="Sina">
+                       <el-input v-model="model.link.sina" type="url"
+                       style="width:50%;min-width:200px;" maxlength="40" show-word-limit></el-input>
+                    </el-form-item>
+                    <el-form-item label="个性主页">
+                       <el-input v-model="model.link.self" type="url"
+                       style="width:50%;min-width:200px;" maxlength="40" show-word-limit></el-input>
                     </el-form-item>
                     <el-form-item >
                         <el-button type="info" :disabled="NoUpdate" 
@@ -64,7 +80,8 @@
         },
         data () {
             return {
-                model:{},
+                model:{
+                },
                 isFull:false,
                 NoUpdate:true
             }
@@ -81,7 +98,7 @@
 
             },
             async save(){
-                this.$confirm('是否整改该文章?', '提示', {
+                this.$confirm('是否整改该用户信息?', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
                   type: 'warning'
@@ -107,7 +124,6 @@
                 deep:true,
                 handler(New,old){
                     if(Object.keys(old).length>0){ //判断是否非初始化时数据变化
-                        console.log(New,old)
                         this.NoUpdate = false
                     }
                 }

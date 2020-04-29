@@ -2,8 +2,14 @@ const mongoose = require("mongoose")
 const sechma = new mongoose.Schema({
     name:{type:String},
     avatar:{type:String},
+    position:{type:String},
     company:{type:String},
     introduction:{type:String},
+    link:{
+        github:{type:String,default:""},
+        sina:{type:String,default:""},
+        self:{type:String,default:""},
+    },
     followers:[{type:mongoose.SchemaTypes.ObjectId,ref:"User"}],
     fans:[{type:mongoose.SchemaTypes.ObjectId,ref:"User"}],
     articles:[{type:mongoose.SchemaTypes.ObjectId,ref:"Article"}],

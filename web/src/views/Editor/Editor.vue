@@ -4,7 +4,7 @@
             <input type="text" maxlength="80" class=" flex-1 titleInput px-2" 
             v-model="Article.title" placeholder="输入文章标题..." @input="editorChange">
             <div class="text-grey-light d-flex align-items-center">
-                <span class="d-none d-md-flex flex-column">
+                <span class="d-none d-md-flex flex-column" v-if="Article.type != 'public'">
                     <span >{{message}}</span>
                     <span v-if="message == '已自动保存至'" class="fs-xxs text-right">{{Article.updatedAt | date}}</span>
                 </span>
@@ -13,13 +13,15 @@
             </div>
             <div class="position-relative mx-3">
                <button class="text-red bg-white border-0" style="outline:none"
-               @click="publishClick()">发布
-                   <svg class="icon" style="padding:3px" :class="{'Reversal':publish}" aria-hidden="true">
+               @click.stop="publishClick()">
+                    <span v-if="Article.type == 'public'">保存</span>
+                    <span v-else>发布</span>
+                    <svg class="icon" style="padding:3px" :class="{'Reversal':publish}" aria-hidden="true">
                         <use xlink:href="#icon-sanjiaoxing"></use>
                     </svg>
                </button>
-                <category-choice v-show="publish" @Public="Public()"
-                :categoriesDefalut="Article.categories"
+                <category-choice  v-show="publish" @Public="Public()"
+                :categoriesDefalut="Article.categories" :isDraft="Article.type == 'private'"
                 @CateChange="CateChange"></category-choice>
             </div>
             <div>
@@ -47,7 +49,8 @@
                 Article:{
                     content:"",
                     title:"",
-                    categories:[]
+                    categories:[],
+                    type:'private'
                 },
                 publish:false,
                 message:"文章将会自动保存至",
@@ -92,10 +95,10 @@
             }
         },
         methods:{
-            publishClick(){
+            publishClick(){ //用于监听发布按钮是否被单击（转换三角形css）
                 this.publish = !this.publish
             },
-            async autoSave(){  
+            async autoSave(){  //根据文章标题和内容是否存在值，进行更新或新建文章
                 if(this.Article.title != '' && this.Article.content != ''){
                     this.message = "文章正在自动保存..."
                     let res = null
@@ -114,12 +117,11 @@
                     }
                 } 
             },
-            editorChange(){
-                console.log("zx")
+            editorChange(){ //监听编辑器的标题和正文部分是否发生改变，节流调用autoSave
                 if(this.onceFlag){
                      this.onceFlag = false
                      return
-                }else{
+                }else if(this.Article.type != 'public'){
                     if(this.lazy) clearTimeout(this.lazy)
                     this.lazy = setTimeout(this.autoSave,2000)
                 }
@@ -132,17 +134,17 @@
                     this.Article = res.data
                 }
             },
-            async imgAdd(pos, $file){
+            async imgAdd(pos, $file){ //图片上传回调Mavon
                 var formdata = new FormData()
                 formdata.append('file', $file)
                 const res = await this.$http.post('upload',formdata)
                 this.$refs.mavon.$img2Url(pos,res.data.url)
             },
-            CateChange(categories){
+            CateChange(categories){ //监测分类是否发生了变化
                 this.Article.categories = categories
                 this.editorChange()
             },
-            Public(){
+            Public(){ //发布文章
                 this.Article.type = 'public'
                 this.autoSave()
                 this.$router.push('/')

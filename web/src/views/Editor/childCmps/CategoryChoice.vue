@@ -33,7 +33,10 @@
             </div>
             <span v-show="Categories.length >= 3" class="fs-xs text-red">最多选择3个分类</span>
             <div class="text-center mt-2">
-                <button @click="$emit('Public')" class="followBtn fs-sm text-red px-2 py-1">确定并发布</button>
+                <button @click="$emit('Public')" class="followBtn fs-sm text-red px-2 py-1">
+                    <span v-if="isDraft">确定并发布</span>
+                    <span v-else>确定并更新</span>
+                </button>
             </div>
         </div>
     </panel>
@@ -46,7 +49,8 @@
 
     export default {
         props:{
-            categoriesDefalut:Array
+            categoriesDefalut:Array,
+            isDraft:Boolean
         },
         data () {
             return {
@@ -59,7 +63,7 @@
             }
         },
         methods: {
-            async fetchUser(){
+            async fetchUser(){ //获取User，并将已选中列表中的不属于已关注分类的分类添加到更多分类列表中
                 const res = await this.$http.get(`rest/users/${'5e6c8193ee0d280fc02505c6'}`)
                 this.User = res.data
                 const UC = this.User.categories.map(e=>e._id)
@@ -67,10 +71,10 @@
                     return !UC.includes(de._id)
                 })
             },
-            commit(){
+            commit(){ //向父组件提交已选中的分类
                 this.$emit('CateChange',this.Categories)
             },
-            Choice(id){
+            Choice(id){ //将id插入到已选中的分类
                 if(!this.Categories.includes(id) && this.Categories.length<3){
                     this.Categories.push(id)
                     this.commit()
@@ -78,14 +82,14 @@
                 }
                 return false
             },
-            disChoice(id){
+            disChoice(id){ //将id从已选中的分类中删除
                 this.$set(this,'Categories',this.Categories.filter(e=>e!=id))
                 this.commit()
             },
-            isChoice(id){
+            isChoice(id){ //由判断是否在已选中的分类序列中
                 return this.Categories.includes(id)
             },
-            SearchCate(){
+            SearchCate(){ //节流向服务端请求搜索更多的分类到列表中
                 if(this.lazy)clearTimeout(this.lazy)
                 this.lazy = setTimeout(async () => {
                     this.search = this.search.trim()
@@ -102,9 +106,10 @@
                     }
                 }, 500);
             },
-            pushMoreChoice(cate){
+            pushMoreChoice(cate){ //监听搜索到的更多的分类到列表项被单击后将该分类添加到已选分类，并加载到更多分类数组中
                 if(this.Choice(cate._id)){  
                     this.moreCate.push(cate)
+                    this.search = ""
                     this.cateRes = []
                 }
             }
@@ -114,7 +119,7 @@
             NorPanel,
             cateItem
         },
-        async created(){
+        async created(){ //获取User,将父参中的默认已选中的分类赋值给已选分类列表
             await this.fetchUser()
             this.$set(this,'Categories',this.categoriesDefalut.map(e=>e._id))
         },
