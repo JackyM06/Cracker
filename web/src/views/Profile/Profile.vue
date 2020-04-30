@@ -11,8 +11,10 @@
                         </div>
                     </div>
                     <div class="p-2">
-                        <article-card v-if="current == 0" :id="this.id"></article-card>
-                        <category-card v-if="current == 3" :user="User"></category-card>
+                        <article-card v-show="current == 0" :id="this.id"></article-card>
+                        <follower-card v-show="current == 1" :users="User.followers"></follower-card>
+                        <follower-card v-show="current == 2" :users="User.fans"></follower-card>
+                        <category-card v-show="current == 3" :categories="User.categories"></category-card>
                     </div>
                 </div>
             </div>
@@ -42,6 +44,7 @@
     import HeadCard from './childCmps/HeadCard.vue'
     import ArticleCard from './childCmps/ArticleCard.vue'
     import CategoryCard from './childCmps/CategoryCard.vue'
+    import FollowerCard from './childCmps/FollowerCard.vue'
 
     import Card from 'components/content/Card/Card.vue'
 
@@ -52,7 +55,7 @@
         data () {
             return {
                 User:{},
-                current:0,
+                current:1,
                 PageList:['文章','关注','粉丝','分类']
             }
         },
@@ -66,6 +69,7 @@
             HeadCard,
             ArticleCard,
             CategoryCard,
+            FollowerCard,
             Card
         },
         created(){

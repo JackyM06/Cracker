@@ -158,11 +158,22 @@ a{
 .followBtn{
     border: 1px solid rgb(203, 56, 55);
     background-color: white;
+    color: rgb(203, 56, 55);
     border-radius: 3px;
+    min-width: 5rem;
+    outline: none!important;
 }
 .followBtn:hover{
     color: white;
     background-color: rgb(203, 56, 55);
+}
+.followedBtn{
+    min-width: 5rem;
+    outline: none!important;
+    border: 1px solid rgb(203, 56, 55);
+    color: white;
+    background-color: rgb(203, 56, 55);
+    border-radius: 3px;
 }
 .InfoTitle{
     font-weight: bolder;
@@ -188,5 +199,4 @@ a{
     // height: 99px;
     position: sticky;
     top: 61px;
-    z-index: 999;
 }

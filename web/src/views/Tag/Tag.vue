@@ -11,7 +11,7 @@
                 <div class=" col-12 px-0">
                     <div class="py-3 px-2 px-md-0 d-flex align-items-center">
                         <img :src="category.img" style="width:35px;height:35px" alt="">
-                        <button class="ml-3 btn bg-red text-white py-1 px-2 fs-xs">关注</button>
+                        <cate-watch class="ml-3" :id="id"></cate-watch>
                         <div class="flex-1"></div>
                         <div class="text-gray-sl">
                             <span @click="ruleChange(null,0)" :class="{'text-red':current == 0}" 
@@ -37,7 +37,7 @@
 <script>
     import ArticleItem from 'components/content/ArticleItem/ArticleItem.vue'
     import UnderLine from 'components/content/UnderLine/UnderLine.vue'
-
+    import CateWatch from 'components/content/Watched//CateWatch.vue'
     import {ArticleInfo} from 'network/module.js'
 
     export default {
@@ -82,7 +82,8 @@
         },
         components:{
             ArticleItem,
-            UnderLine
+            UnderLine,
+            CateWatch
         },
         created(){
             this.fetchInfoList()

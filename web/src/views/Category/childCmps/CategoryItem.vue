@@ -8,17 +8,21 @@
                  class="font-weight cursor-point">{{category.name}}</span>
                 <p class="text-gray-sl fs-sm">{{category.desc}}</p>
                 <span class="text-gray-sl fs-xs">共{{category.count}}篇文章</span><br>
-                <button class="btn bg-red text-white py-1 px-3 mt-2 fs-sm">关注</button>
+                <cate-watch :id="category._id"></cate-watch>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    import CateWatch from 'components/content/Watched/CateWatch.vue'
     export default {
         props:{
             category:Object
         },
+        components:{
+            CateWatch
+        }
     }
 </script>
 

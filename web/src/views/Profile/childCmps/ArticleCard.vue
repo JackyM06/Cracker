@@ -1,12 +1,16 @@
 <template>
     <div ref="articleCard">
-        <article-item v-for="(item,key) in Articles" :key="key"
-        :article-info="item"></article-item>
+        <div v-if="Articles.length>0">
+            <article-item v-for="(item,key) in Articles" :key="key"
+            :article-info="item"></article-item>
+        </div>
+        <no-more v-else></no-more>
     </div>
 </template>
 
 <script>
     import ArticleItem from 'components/content/ArticleItem/ArticleItem.vue'
+    import NoMore from 'components/content/NoMore/NoMore.vue'
 
     import {ArticleInfo} from 'network/module.js'
     export default {
@@ -20,7 +24,8 @@
             }
         },
         components:{
-            ArticleItem
+            ArticleItem,
+            NoMore
         },
         methods:{
             async fetchArticleList(){

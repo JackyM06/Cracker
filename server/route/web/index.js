@@ -35,12 +35,12 @@ module.exports = app => {
         .where(req.ModelName == "Article"?{type:'public'}:null)
         .select('+content')
         .populate('author').populate('categories').populate('comments.user')
-        .populate('comments.communicates.user')
+        .populate('comments.communicates.user').populate('fans').populate('followers')
         .populate('comments.communicates.resp_user').lean()
         if(req.user._id){
             if(req.user._id == data._id){
                 data.canEdit = true
-            }else if( data.author && data.author._id == data.canEdit ){
+            }else if( data.author && data.author._id == req.user._id ){
                 data.canEdit = true
             }else{
                 data.canEdit = false

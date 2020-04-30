@@ -1,24 +1,15 @@
 <template>
     <div v-if='Object.keys(Article).length>0'>
         <!-- 文章头部 -->
-        <div class="d-flex align-items-center my-2 px-2">
-            <div>
-                <img class="avatar cursor-point" @click="pushProfile" :src="Article.author.avatar" alt="">
+        <user-item class="my-2 px-2" :user="Article.author">
+            <div slot="more" class="fs-sm text-grey-light">
+                <span class="mr-2">发布于 {{Article.createdAt | date}}</span>
+                <span v-if="Article.createdAt!=Article.updatedAt" class="mr-2">更新 {{Article.updatedAt | date(Article.createdAt)}}</span>
+                <span class="mr-1">阅读</span>
+                <span class="mr-1">{{Article.visits}}</span>
+                <span v-if="Article.canEdit" @click="pushEdit" class="text-red cursor-point">编辑</span>
             </div>
-            <div class="flex-1 mx-2">
-                <h6 style="font-weight:bolder" class="cursor-point" @click="pushProfile">{{Article.author.name}}</h6>
-                <div class="fs-sm text-grey-light">
-                    <span class="mr-2">发布于 {{Article.createdAt | date}}</span>
-                    <span v-if="Article.createdAt!=Article.updatedAt" class="mr-2">更新 {{Article.updatedAt | date(Article.createdAt)}}</span>
-                    <span class="mr-1">阅读</span>
-                    <span class="mr-1">{{Article.visits}}</span>
-                    <span v-if="Article.canEdit" @click="pushEdit" class="text-red">编辑</span>
-                </div>
-            </div>
-            <div>
-                <button  class="followBtn fs-xs text-red px-2 py-1">关注</button>
-            </div>
-        </div>
+        </user-item>
         <!-- 文章标题 -->
         <div class="px-2 my-3 d-inline-block">
             <h2 class="font-weight d-inline-block">{{Article.title}}</h2>
@@ -50,6 +41,8 @@
 </template>
 
 <script>
+    import UserItem from 'components/content/UserItem/UserItem.vue'
+
     export default {
         props:{
             Article:Object,
@@ -67,12 +60,12 @@
             },
         },
         methods:{
-            pushProfile(){
-                this.$router.push(`/profile/${this.Article.author._id}`)
-            },
             pushEdit(){
                 this.$router.push(`/editor/${this.Article._id}`)
             }
+        },
+        components:{
+            UserItem
         }
     }
 </script>
