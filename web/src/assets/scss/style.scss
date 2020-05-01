@@ -138,6 +138,9 @@ a{
 .cursor-point{
     cursor: pointer;
 }
+.cursor-point:hover{
+    opacity: 0.8;
+}
 
 .border-b{
     border-bottom: 1px solid #f0f2f7;

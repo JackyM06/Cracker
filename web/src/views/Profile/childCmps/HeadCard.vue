@@ -28,7 +28,8 @@
                     </svg>
                 </a>
             </div>
-            <button v-if="user.canEdit" class="fs-sm flex-grow-0 followBtn text-red py-1 px-2">编辑个人资料</button>
+            <button v-if="user.canEdit" @click="$router.push('/settings')"
+            class="fs-sm flex-grow-0 followBtn text-red py-1 px-2">编辑个人资料</button>
             <user-watch v-else :id="user._id"></user-watch>
         </div>
     </div>

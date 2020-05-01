@@ -22,7 +22,7 @@ const schame = new mongoose.Schema({
     }],
     supporters:[{
         user:{type:mongoose.SchemaTypes.ObjectId,ref:'User'},
-        time:{type:Date}
+        time:{type:Date,default:Date.now}
     }],
     visits:{type:Number,default:0},
     type:{type:String,default:"private"} //public 、 private

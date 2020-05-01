@@ -6,8 +6,10 @@
                 <span class="mr-2">发布于 {{Article.createdAt | date}}</span>
                 <span v-if="Article.createdAt!=Article.updatedAt" class="mr-2">更新 {{Article.updatedAt | date(Article.createdAt)}}</span>
                 <span class="mr-1">阅读</span>
-                <span class="mr-1">{{Article.visits}}</span>
-                <span v-if="Article.canEdit" @click="pushEdit" class="text-red cursor-point">编辑</span>
+                <span class="mr-2">{{Article.visits}}</span>
+                <span v-if="Article.canEdit" @click="pushEdit" class="text-red cursor-point mr-2">编辑</span>
+                <span v-if="Article.canEdit" @click="DeleteArticle()" 
+                class="text-grey-light cursor-point">删除</span>
             </div>
         </user-item>
         <!-- 文章标题 -->
@@ -62,6 +64,12 @@
         methods:{
             pushEdit(){
                 this.$router.push(`/editor/${this.Article._id}`)
+            },
+            async DeleteArticle(){
+                const res = await this.$http.delete(`articles/${this.Article._id}`)
+                if(res.data.ok == 1){
+                    this.$router.go(-1)
+                }
             }
         },
         components:{

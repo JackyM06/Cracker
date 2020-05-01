@@ -23,13 +23,11 @@
                 <div class="py-1 px-3 flex-1 nav-item">
                     <router-link tag="button" class="bg-red btn cursor-point" to="/editor/new">写文章</router-link>
                 </div>
-                <div v-if="!user" class="py-1">
-                    <button class="nav-item btn bg-grey cursor-point">登录</button>
-                    <button class="nav-item btn bg-black ml-2 cursor-point">加入</button>
+                <div v-if="user" class="py-1">
+                    <button class="nav-item btn bg-grey cursor-point" @click="LoginShow=!LoginShow">登录</button>
+                    <button class="nav-item btn bg-black ml-2 cursor-point" @click="RegisterShow=!RegisterShow">加入</button>
                 </div>
-                <div v-else>
-                    <button>我是已登录</button>
-                </div>
+                <avatar  v-else :user = 'user'></avatar>
             </div>
         </div>
         <!-- lg以下终端设备应用该导航 -->
@@ -70,16 +68,30 @@
                 </nav>
             </div>
         </div>
+
+        <login :is-show="LoginShow"></login>
+        <Register :is-show="RegisterShow"></Register>
     </div>
 </template>
 
 <script>
+    import Avatar from './Avatar.vue'
+    import Login from 'views/Login/Login.vue'
+    import Register from 'views/Login/Register.vue'
+
     export default {
         data(){
             return {
-                user:localStorage.cracker,
-                searchKey:this.$route.params.searchkey || ""
+                user:{},
+                searchKey:this.$route.params.searchkey || "",
+                LoginShow:false,
+                RegisterShow:false
             }
+        },
+        components:{
+            Avatar,
+            Login,
+            Register
         },
         methods:{
             search(){
@@ -89,7 +101,14 @@
                 }else{
                     this.$router.push(`/search/${this.searchKey}`)
                 }
+            },
+            async fetchUser(){
+                const res = await this.$http.get('users/info')
+                this.user = res.data
             }
+        },
+        created(){
+            this.fetchUser()
         }
 
     }
@@ -150,7 +169,7 @@
     opacity: 0.8;
 }
 .tob-bar{
-    z-index: 999;
+    z-index: 10;
     position: sticky;
     top: 0;
 }

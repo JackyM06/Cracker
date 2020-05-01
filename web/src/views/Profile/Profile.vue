@@ -19,22 +19,8 @@
                 </div>
             </div>
             <div class="d-none d-lg-block col-lg-3  pl-2 ">
-                <div class="rightCmps">
-                    <card title="个人成就" class="card-s bg-white mt-2">
-                        <div slot="body">
-                            <div>文章被阅读 </div>
-                            <div>获得点赞 </div>
-                        </div>
-                    </card>
-                    <div class="card-s bg-white p-3">
-                        <div>关注了 </div>
-                        <div>关注者 </div>
-                    </div>
-                    <div class="card-s bg-white mt-2 p-3">
-                        <div>关注分类</div>
-                        <div>加入于</div>
-                    </div>
-                </div>
+                <right-half v-if="User" class="rightCmps" @currentChange="currentChange" 
+                :user="User"></right-half>
             </div>
         </div>
     </div>
@@ -45,8 +31,7 @@
     import ArticleCard from './childCmps/ArticleCard.vue'
     import CategoryCard from './childCmps/CategoryCard.vue'
     import FollowerCard from './childCmps/FollowerCard.vue'
-
-    import Card from 'components/content/Card/Card.vue'
+    import RightHalf from './childCmps/RightHalf.vue'
 
     export default {
         props:{
@@ -54,8 +39,12 @@
         },
         data () {
             return {
-                User:{},
-                current:1,
+                User:{
+                    _id:this.id,
+                    fans:[],
+                    followers:[]
+                },
+                current:0,
                 PageList:['文章','关注','粉丝','分类']
             }
         },
@@ -63,6 +52,9 @@
             async fetchUser(){
                 const res = await this.$http.get(`rest/users/${this.id}`)
                 this.User = res.data
+            },
+            currentChange(value){
+                this.current = value
             }
         },
         components:{
@@ -70,7 +62,8 @@
             ArticleCard,
             CategoryCard,
             FollowerCard,
-            Card
+            RightHalf,
+            
         },
         created(){
             this.fetchUser()

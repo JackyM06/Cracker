@@ -22,11 +22,9 @@
                </button>
                 <category-choice  v-show="publish" @Public="Public()"
                 :categoriesDefalut="Article.categories" :isDraft="Article.type == 'private'"
-                @CateChange="CateChange"></category-choice>
+                @CateChange="CateChange" ref="catePanel"></category-choice>
             </div>
-            <div>
-                <img src="http://localhost:3000/uploads/9360cdb34be562d7f3a1899c57f3ba99" style="width:30px;height:30px" alt="">
-            </div>
+             <avatar :user="user"></avatar>
        </div>
         <mavon-editor
             class="editor-body" style="z-index:1"
@@ -39,7 +37,8 @@
 
 <script>
     import CategoryChoice from './childCmps/CategoryChoice.vue'
-
+    import Avatar from '../Main/childCmps/TopBar/Avatar.vue'
+    
     export default {
         props:{
             id:String
@@ -91,6 +90,7 @@
                     subfield: true, // 单双栏模式
                     preview: true, // 预览
                 },
+                user:{}
                
             }
         },
@@ -148,14 +148,26 @@
                 this.Article.type = 'public'
                 this.autoSave()
                 this.$router.push('/')
+            },
+            async fetchUser(){
+                const res = await this.$http.get('users/info')
+                this.user = res.data
             }
 
         },
         components:{
-            CategoryChoice
+            CategoryChoice,
+            Avatar
         },
         created(){
             this.fetchArticle()
+            this.fetchUser()
+            document.addEventListener('click',(e)=>{
+                let isSelf = this.$refs.catePanel.$el.contains(e.target)
+                if(!isSelf){
+                    this.publish = false
+                }
+            })
         }
     }
 </script>

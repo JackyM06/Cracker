@@ -71,7 +71,6 @@
         },
         beforeRouteLeave(to, from, next){
             this.ScrollTop =document.documentElement.scrollTop || document.body.scrollTop
-            console.log(this.ScrollTop)
             next()
         },
         activated(){
