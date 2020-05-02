@@ -51,6 +51,15 @@ Vue.mixin({
   }
 })
 
+// 引入elementUI
+import { Message  } from 'element-ui';
+//由于Message组件并没有install 方法供Vue来操作的，是直接返回的，因此按照官方文档单独引入的方法是
+//会报错的，需要给 Message 添加 install 方法
+Message.install = function (Vue) {
+  Vue.prototype.$message = Message
+}
+Vue.use(Message)//消息提示
+
 new Vue({
   router,
   store,

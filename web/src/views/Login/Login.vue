@@ -29,7 +29,10 @@
       },
       methods:{
         close(){
-          this.$emit('close')
+          this.$message('这是一条消息提示')
+          // this.e_mail = ""
+          // this.password = ""
+          // this.$emit('close')
         },
         goRegister(){
           this.$emit('goRegister')

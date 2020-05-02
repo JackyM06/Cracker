@@ -60,9 +60,11 @@
                             <li class="nav-item"><a href="/home" class="nav-link">首页</a></li>
                             <li class="nav-item"><a href="/categories" class="nav-link">分类</a></li>
                             <li class="nav-item"><a href="/hot" class="nav-link">热榜</a></li>
-                            <li class="nav-item"><a href="/editor" class="nav-link">写文章</a></li>
-                            <li class="nav-item"><a href="#" class="nav-link">登录</a></li>
-                            <li class="nav-item"><a href="#" class="nav-link">注册</a></li>
+                            <li class="nav-item"><a href="/editor/new" class="nav-link">写文章</a></li>
+                            <li v-if="Object.keys(user).length == 0" class="nav-item"><a @click="LoginShow=true" class="nav-link cursor-point">登录</a></li>
+                            <li v-if="Object.keys(user).length == 0" class="nav-item"><a @click="RegisterShow=true" class="nav-link cursor-point">注册</a></li>
+                            <li v-if="!Object.keys(user).length == 0" class="nav-item"><a :href="`/profile/${user._id}`" class="nav-link">我的主页</a></li>
+                            <li v-if="!Object.keys(user).length == 0" class="nav-item"><a @click="LoginOut" class="nav-link cursor-point">登出</a></li>
                         </ul>
                     </div>
                 </nav>
@@ -103,7 +105,6 @@
                 }
             },
             async fetchUser(){
-                console.log("ok")
                 const res = await this.$http.get('users/nomust/info')
                 this.user = res.data
             },
@@ -122,6 +123,7 @@
                 this.LoginShow = true
             },
             LoginOut(){
+                localStorage.clear()
                 this.user = {}
                 this.$router.replace('/')
             }

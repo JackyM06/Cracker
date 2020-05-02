@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import Vue from 'vue'
 import router from '../router'
 
 let http = Axios.create({
@@ -8,8 +9,8 @@ let http = Axios.create({
 http.interceptors.response.use(res=>{
     return res
 },err=>{
-    // const message = err.response.data.message
-    // alert(message)
+    const message = err.response.data.message
+    Vue.$message.warning(message)
     if(err.response.status == 401){
         router.push('/')
     }
