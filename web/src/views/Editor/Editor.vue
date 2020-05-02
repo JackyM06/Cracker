@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="Object.keys(user).length>0 && Object.keys(Article).length>0">
        <div class="w-100 input d-flex bg-white border-b align-items-center px-3">
             <input type="text" maxlength="80" class=" flex-1 titleInput px-2" 
             v-model="Article.title" placeholder="输入文章标题..." @input="editorChange">
@@ -20,8 +20,8 @@
                         <use xlink:href="#icon-sanjiaoxing"></use>
                     </svg>
                </button>
-                <category-choice  v-show="publish" @Public="Public()"
-                :categoriesDefalut="Article.categories" :isDraft="Article.type == 'private'"
+                <category-choice v-show="publish" @Public="Public()"
+                :user="user" :categoriesDefalut="Article.categories" :isDraft="Article.type == 'private'"
                 @CateChange="CateChange" ref="catePanel"></category-choice>
             </div>
              <avatar :user="user"></avatar>
@@ -163,9 +163,11 @@
             this.fetchArticle()
             this.fetchUser()
             document.addEventListener('click',(e)=>{
-                let isSelf = this.$refs.catePanel.$el.contains(e.target)
-                if(!isSelf){
-                    this.publish = false
+                if(this.$refs.catePanel){
+                    let isSelf = this.$refs.catePanel.$el.contains(e.target)
+                    if(!isSelf){
+                        this.publish = false
+                    }
                 }
             })
         }

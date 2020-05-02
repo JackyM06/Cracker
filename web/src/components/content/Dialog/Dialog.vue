@@ -1,12 +1,12 @@
 <template>
-    <div v-show="show">
+    <div v-show="isShow">
         <div class="dialogBg">
           <div class="dialog card-s p-4" ref="dialog">
               <div class="d-flex mb-2">
                   <div class="flex-1">
                       <slot name="title"></slot>
                   </div>
-                  <div class="cursor-point" @click="show = false">
+                  <div class="cursor-point" @click="$emit('close')">
                     <svg class="icon text-gray-sl" aria-hidden="true">
                       <use xlink:href="#icon-close"></use>
                     </svg>
@@ -23,22 +23,11 @@
 <script>
     export default {
         props:{
-        
           isShow:{
             type:Boolean,
             default:false
           }
         },
-        data () {
-          return {
-            show:this.isShow
-          }
-        },
-        watch:{
-          isShow(){
-            this.show = true
-          }
-        }
     }
 </script>
 

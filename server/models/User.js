@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const sechma = new mongoose.Schema({
     name:{type:String},
-    avatar:{type:String},
+    avatar:{type:String,default:'http://localhost:3000/uploads/placehorder.png'},
     position:{type:String},
     company:{type:String},
     introduction:{type:String},
@@ -17,6 +17,7 @@ const sechma = new mongoose.Schema({
     followers_size:{type:Number,default:0},
     articles_size:{type:Number,default:0},
     categories:[{type:mongoose.SchemaTypes.ObjectId,ref:"Category"}],
+    e_mail:{type:String},
     password:{
         type:String,
         select:false,

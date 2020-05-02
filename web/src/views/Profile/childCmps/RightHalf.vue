@@ -73,7 +73,7 @@
         },
         methods:{
             async fetchAchievement(){
-                const res = await this.$http.get(`users/achievement/${this.user._id}`)
+                const res = await this.$http.get(`users/nomust/achievement/${this.user._id}`)
                 this.visits = res.data.visits
                 this.supporters = res.data.supporters
                 this.articlesCount = res.data.articlesCount

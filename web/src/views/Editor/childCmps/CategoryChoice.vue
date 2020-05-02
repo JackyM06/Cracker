@@ -4,11 +4,12 @@
             <h5 class="font-weight">发布文章</h5>
             <div class="mt-2">
                 <span>已关注分类</span>
-                <div class="d-flex flex-wrap py-2">
-                    <cate-item v-for="(item,key) in User.categories" :key="key" 
+                <div class="d-flex flex-wrap py-2" v-if="user.categories.length>0">
+                    <cate-item v-for="(item,key) in user.categories" :key="key" 
                     :class="{'choice':isChoice(item._id)}" :isChoice="isChoice(item._id)"
                     :Category="item" @Choice="Choice(item._id)" @disChoice="disChoice(item._id)">{{item.name}}</cate-item>
                 </div>
+                <div v-else class="my-3"> 无</div>
             </div>
             <div class="mt-2">
                 <span>更多分类</span>
@@ -50,12 +51,12 @@
     export default {
         props:{
             categoriesDefalut:Array,
-            isDraft:Boolean
+            isDraft:Boolean,
+            user:Object
         },
         data () {
             return {
                 search:"",
-                User:{},
                 Categories:[],
                 cateRes:[],
                 lazy:null,
@@ -63,14 +64,6 @@
             }
         },
         methods: {
-            async fetchUser(){ //获取User，并将已选中列表中的不属于已关注分类的分类添加到更多分类列表中
-                const res = await this.$http.get(`rest/users/${'5e6c8193ee0d280fc02505c6'}`)
-                this.User = res.data
-                const UC = this.User.categories.map(e=>e._id)
-                this.moreCate = this.categoriesDefalut.filter(de=>{
-                    return !UC.includes(de._id)
-                })
-            },
             commit(){ //向父组件提交已选中的分类
                 this.$emit('CateChange',this.Categories)
             },
@@ -119,8 +112,11 @@
             NorPanel,
             cateItem
         },
-        async created(){ //获取User,将父参中的默认已选中的分类赋值给已选分类列表
-            await this.fetchUser()
+        created(){ //获取User,将父参中的默认已选中的分类赋值给已选分类列表
+            const UC = this.user.categories.map(e=>e._id)
+            this.moreCate = this.categoriesDefalut.filter(de=>{
+                return !UC.includes(de._id)
+            })
             this.$set(this,'Categories',this.categoriesDefalut.map(e=>e._id))
         },
     }

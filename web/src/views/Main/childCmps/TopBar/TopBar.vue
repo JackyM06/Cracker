@@ -23,11 +23,11 @@
                 <div class="py-1 px-3 flex-1 nav-item">
                     <router-link tag="button" class="bg-red btn cursor-point" to="/editor/new">写文章</router-link>
                 </div>
-                <div v-if="user" class="py-1">
-                    <button class="nav-item btn bg-grey cursor-point" @click="LoginShow=!LoginShow">登录</button>
-                    <button class="nav-item btn bg-black ml-2 cursor-point" @click="RegisterShow=!RegisterShow">加入</button>
+                <div v-if="Object.keys(user).length == 0" class="py-1">
+                    <button class="nav-item btn bg-grey cursor-point" @click="LoginShow=true">登录</button>
+                    <button class="nav-item btn bg-black ml-2 cursor-point" @click="RegisterShow=true">加入</button>
                 </div>
-                <avatar  v-else :user = 'user'></avatar>
+                <avatar @LoginOut="LoginOut"  v-else :user = 'user'></avatar>
             </div>
         </div>
         <!-- lg以下终端设备应用该导航 -->
@@ -69,8 +69,8 @@
             </div>
         </div>
 
-        <login :is-show="LoginShow"></login>
-        <Register :is-show="RegisterShow"></Register>
+        <login :is-show="LoginShow" @LoginSuccess="fetchUser"  @close="closeLogin()" @goRegister="goRegister()"></login>
+        <Register :is-show="RegisterShow" @RegisterSuccess="fetchUser" @close="closeRegister()" @goLogin="goLogin()"></Register>
     </div>
 </template>
 
@@ -103,8 +103,27 @@
                 }
             },
             async fetchUser(){
-                const res = await this.$http.get('users/info')
+                console.log("ok")
+                const res = await this.$http.get('users/nomust/info')
                 this.user = res.data
+            },
+            closeLogin(){
+                this.LoginShow = false
+            },
+            closeRegister(){
+                this.RegisterShow = false
+            },
+            goRegister(){
+                this.closeLogin()
+                this.RegisterShow = true
+            },
+            goLogin(){
+                this.closeRegister()
+                this.LoginShow = true
+            },
+            LoginOut(){
+                this.user = {}
+                this.$router.replace('/')
             }
         },
         created(){

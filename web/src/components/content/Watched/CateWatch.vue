@@ -17,7 +17,7 @@
         },
         methods:{
             async fetchIsWatched(){
-                const res = await this.$http.get(`users/categoires/watched/${this.id}`)
+                const res = await this.$http.get(`users/nomust/categoires/watched/${this.id}`)
                 this.isWatched = res.data.isWatched
             },
             async updatedWatch(){

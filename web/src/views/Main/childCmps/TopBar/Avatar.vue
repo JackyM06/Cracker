@@ -30,12 +30,12 @@
                           <use xlink:href="#icon-cog"></use>
                         </svg>
                         设置</router-link>
-                        <router-link tag="span" class="py-2 px-3 cursor-point link-item"
-                        to="/">
+                        <span class="py-2 px-3 cursor-point link-item"
+                        @click="LoginOut">
                         <svg class="icon mr-2" aria-hidden="true">
                           <use xlink:href="#icon-loop-arrow"></use>
                         </svg>
-                        登出</router-link>
+                        登出</span>
                     </div>
                 </nor-panel>
             </div>
@@ -54,14 +54,22 @@
                 showPanel:false
             }
         },
+        methods:{
+            LoginOut(){
+                localStorage.clear()
+                this.$emit('LoginOut')
+            }
+        },
         components:{
             NorPanel
         },
         created(){
             document.addEventListener('click',(e)=>{
-                let isSelf = this.$refs.avatar.contains(e.target)
-                if(!isSelf){
-                    this.showPanel = false
+                if(this.$refs.avatar){
+                    let isSelf = this.$refs.avatar.contains(e.target)
+                    if(!isSelf){
+                        this.showPanel = false
+                    }
                 }
             })
         }
