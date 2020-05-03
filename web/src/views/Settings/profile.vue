@@ -2,7 +2,17 @@
     <card title="个人资料">
         <div slot="body">
             <edit-item title="头像">
-                <img slot="body" :src="user.avatar" alt="" style="width:72px;height:72px">   
+                <div slot="body" class="d-flex align-items-end">
+                    <img  :src="user.avatar" alt="" style="width:72px;height:72px"> 
+                    <el-upload
+                        :show-file-list="false"
+                        :action="`${$http.defaults.baseURL}/upload`"
+                        :on-success="handleAvatarSuccess"
+                        :before-upload="beforeAvatarUpload">
+                      <button class="followedBtn py-1 ml-3">上传</button>
+                      <!-- <div slot="tip" class="fs-xs">只能上传jpg/png文件，且不超过500kb</div> -->
+                    </el-upload>   
+                </div>  
             </edit-item>
             <edit-item title="用户名">
                 <input slot="body" type="text" @focus="currentChange(0,$event.target,false)" class="textInput" v-model="user.name">
@@ -75,6 +85,20 @@
             cancelEdit(key){
                 this.user[key] = this.strCache
                 this.current = -1
+            },
+            beforeAvatarUpload(file){
+                const isJPG = file.type === 'image/jpeg';
+                const isLt2M = file.size / 1024 < 500;
+                if (!isJPG) {
+                  this.$message.error('上传头像图片只能是 JPG/PNG 格式!');
+                }else if (!isLt2M) {
+                  this.$message.error('上传头像图片大小不能超过 500KB!');
+                }
+                return isJPG && isLt2M;
+            },
+            handleAvatarSuccess(res){
+                this.user.avatar = res.url
+                this.saveField('avatar')
             }
         }
     }

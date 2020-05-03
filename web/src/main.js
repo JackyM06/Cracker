@@ -6,7 +6,8 @@ import store from './store'
 Vue.config.productionTip = false
 
 // 引入elementUI - Message & MessageBOx
-import {Message,MessageBox} from 'element-ui'
+import {Message,MessageBox,Upload} from 'element-ui'
+Vue.use(Upload)
 Vue.prototype.$message = Message;
 Vue.prototype.$MessageBox = MessageBox;
 

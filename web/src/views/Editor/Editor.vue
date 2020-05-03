@@ -146,15 +146,23 @@
                 this.editorChange()
             },
             Public(){ //发布文章
-                if(this.Article.categories.length>0){
-                    this.Article.type = 'public'
-                    this.autoSave()
-                    this.published = true
-                    this.$router.push('/')
-                    this.$message.success("发布成功！")
-                }else{
+                if(this.Article.categories.length == 0){
                     this.$message.warning("请至少选择一个分类")
+                    return
                 }
+                if(this.Article.title.length == 0){
+                    this.$message.warning("请填写标题")
+                    return
+                }
+                if(this.Article.content.length == 0){
+                    this.$message.warning("请填写内容")
+                    return
+                }
+                this.Article.type = 'public'
+                this.autoSave()
+                this.published = true
+                this.$router.push('/')
+                this.$message.success("发布成功！")
             },
             async fetchUser(){
                 const res = await this.$http.get('users/info')
