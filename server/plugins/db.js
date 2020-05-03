@@ -11,5 +11,5 @@ module.exports = (app)=>{
         }
     })
     // app.use(mongoose)
-    require('require-all')(__dirname+'../../models')
+    // require('require-all')(__dirname+'../../models')
 }
