@@ -60,7 +60,7 @@
               veri_code:this.VeriCode
             })
             if(res.data.token){
-              localStorage.token = res.data.token
+              localStorage.Cracker = res.data.token
               this.$store.commit("Login")
               await this.$emit('RegisterSuccess')
               this.close()

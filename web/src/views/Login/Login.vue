@@ -40,7 +40,7 @@
               e_mail:this.e_mail,
               password:this.password
             })
-            localStorage.token = res.data.token
+            localStorage.Cracker = res.data.token
             this.$message.success("登入成功")
             this.$store.commit("Login")
             this.$emit('LoginSuccess')

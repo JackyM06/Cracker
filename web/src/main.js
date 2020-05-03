@@ -60,7 +60,7 @@ Vue.mixin({
   },
   computed: {
     authHeader(){
-      return  {Authorization:'Bearer '+localStorage.token}
+      return  {Authorization:'Bearer '+localStorage.Cracker}
     }
   }
 })

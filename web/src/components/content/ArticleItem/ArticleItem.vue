@@ -51,7 +51,7 @@
         },
         data () {
             return {
-                url:"http://localhost:8083/post/"+this.articleInfo.articleId   
+                url:"http://39.106.198.9/post/"+this.articleInfo.articleId   
             }
         },
         methods:{

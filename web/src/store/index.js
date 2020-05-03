@@ -7,7 +7,7 @@ export default new Vuex.Store({
   state: {
     LoginShow:false,
     RegisterShow:false,
-    Logged:localStorage.token
+    Logged:localStorage.Cracker
   },
   mutations: {
     closeLoginShow(state){
