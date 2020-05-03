@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Dialog :is-show="isShow" @close="close">
+        <Dialog :is-show="$store.state.RegisterShow" @close="close">
             <h5 slot="title" class="font-weight">注册</h5>
             <div slot="body">
                 <form action="" @submit.prevent="Register">
@@ -30,9 +30,6 @@
 <script>
     import Dialog from 'components/content/Dialog/Dialog.vue'
     export default {
-      props:{
-        isShow:Boolean
-      },
       data () {
         return {
           e_mail:"",
@@ -48,10 +45,11 @@
           this.name = ""
           this.password = ""
           this.VeriCode = "",
-          this.$emit('close')
+          this.$store.commit('closeRegisterShow')
         },
         goLogin(){
-          this.$emit('goLogin')
+          this.close()
+          this.$store.commit('openLoginShow')
         },
         async Register(){
           if(this.VeriForm()){
@@ -63,6 +61,7 @@
             })
             if(res.data.token){
               localStorage.token = res.data.token
+              this.$store.commit("Login")
               await this.$emit('RegisterSuccess')
               this.close()
             }
@@ -73,7 +72,7 @@
           if(regEmail.test(this.e_mail)){
             await this.$http.post('register/vericode',{e_mail:this.e_mail})
             this.$refs.getVeri.setAttribute("disabled", true)
-            this.Interval = 10
+            this.Interval = 60
             let timer = setInterval(()=>{
               this.Interval--
               if(this.Interval == 0){

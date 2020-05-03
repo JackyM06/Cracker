@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Dialog :is-show="isShow" @close="close">
+        <Dialog :is-show="$store.state.LoginShow" @close="close">
             <h5 slot="title" class="font-weight">登录</h5>
             <div slot="body">
                 <input type="text" v-model="e_mail" class="inputText" placeholder="请输入邮箱">
@@ -18,23 +18,21 @@
 <script>
     import Dialog from 'components/content/Dialog/Dialog.vue'
     export default {
-      props:{
-        isShow:Boolean
-      },
       data () {
         return {
-          e_mail:"ChinaMJK06@163.com",
-          password:"123.123."
+          e_mail:"",
+          password:""
         }
       },
       methods:{
         close(){
           this.e_mail = ""
           this.password = ""
-          this.$emit('close')
+          this.$store.commit('closeLoginShow')
         },
         goRegister(){
-          this.$emit('goRegister')
+          this.close()
+          this.$store.commit('openRegisterShow')
         },
         async Login(){
           if(this.VeriForm()){
@@ -44,6 +42,7 @@
             })
             localStorage.token = res.data.token
             this.$message.success("登入成功")
+            this.$store.commit("Login")
             this.$emit('LoginSuccess')
             this.close()
           }

@@ -1,7 +1,7 @@
 <template>
     <div class="text-grey-light fs-sm">
         <div>
-            <span class=" cursor-point" >关于Cracker</span>
+            <span @click="$router.push('/about')" class="cursor-point" >关于Cracker</span>
         </div>
     </div>
 </template>

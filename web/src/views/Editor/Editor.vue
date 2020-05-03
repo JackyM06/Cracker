@@ -175,6 +175,7 @@
             Avatar
         },
         created(){
+            if(!this.$store.state.Logged) this.$router.go(-1)
             this.fetchArticle()
             this.fetchUser()
             document.addEventListener('click',(e)=>{
@@ -186,20 +187,20 @@
                 }
             })
         },
-        beforeRouteLeave(to, from, next){
-            // 判断是否保存当前文章，并确定是否为发布链接跳转
-            if(!this.published && this.message != '已自动保存至'){
-                this.$MessageBox.confirm('当前编辑器存在未保存内容，是否退出编辑？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                }).then(() => {
-                    next()
-                })
-            }else{
-                next()
-            }
+        // beforeRouteLeave(to, from, next){
+        //     // 判断是否保存当前文章，并确定是否为发布链接跳转
+        //     if(!this.published && this.message != '已自动保存至'){
+        //         this.$MessageBox.confirm('当前编辑器存在未保存内容，是否退出编辑？', '提示', {
+        //             confirmButtonText: '确定',
+        //             cancelButtonText: '取消',
+        //         }).then(() => {
+        //             next()
+        //         })
+        //     }else{
+        //         next()
+        //     }
             
-        }
+        // }
     }
 </script>
 

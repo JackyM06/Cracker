@@ -4,9 +4,9 @@
         <user-item class="my-2 px-2" :user="Article.author">
             <div slot="more" class="fs-sm text-grey-light">
                 <span class="mr-2">发布于 {{Article.createdAt | date}}</span>
-                <span v-if="Article.createdAt!=Article.updatedAt" class="mr-2">更新 {{Article.updatedAt | date(Article.createdAt)}}</span>
+                <span v-if="Article.createdAt!=Article.updatedAt" class="mr-2">最近浏览 {{Article.updatedAt | date(Article.createdAt)}}</span>
                 <span class="mr-1">阅读</span>
-                <span class="mr-2">{{Article.visits}}</span>
+                <span class="mr-2">{{Article.visits+1}}</span>
                 <span v-if="Article.canEdit" @click="pushEdit" class="text-red cursor-point mr-2">编辑</span>
                 <span v-if="Article.canEdit" @click="DeleteArticle()" 
                 class="text-grey-light cursor-point">删除</span>
@@ -26,8 +26,17 @@
            :editable="prop.editable"
            :scrollStyle="prop.scrollStyle"
         ></mavon-editor>
+        <!-- 点赞 -->
+        <div class="p-3 d-flex align-items-center">
+            <p class="font-weight mr-2">{{Article.supporters.length}}人赞了该文章</p>
+            <div @click="Support" class="cursor-point">
+                <svg class="icon fs-xxxl text-red" aria-hidden="true">
+                    <use xlink:href="#icon-zan"></use>
+                </svg>
+            </div>
+        </div>
         <!-- 文章标签推荐 -->
-        <div v-if="Article.categories.length>0">
+        <div v-if="Article.categories && Article.categories.length>0">
             <p class="font-weight my-2 pl-2 pl-md-3">关注下面的标签，获得更多相关文章</p>
             <div class="d-flex pl-2 pl-md-3">
                 <div v-for="(item,key) in Article.categories" :key="key" 
@@ -66,10 +75,22 @@
                 this.$router.push(`/editor/${this.Article._id}`)
             },
             async DeleteArticle(){
-                const res = await this.$http.delete(`articles/${this.Article._id}`)
-                if(res.data.ok == 1){
-                    this.$router.go(-1)
-                }
+                this.$MessageBox.confirm('此操作将永久删除该文章, 是否继续?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                }).then( async() => {
+                    const res = await this.$http.delete(`articles/${this.Article._id}`)
+                    if(res.data.ok == 1){
+                        this.$message.success('现已删除！')
+                        this.$router.go(-1)
+                    }
+                })
+            },
+            async Support(){
+                await this.$http.put(`articles/support/${this.Article._id}`)
+                this.$emit('Supported')
+                this.$message.success('点赞成功！')
             }
         },
         components:{

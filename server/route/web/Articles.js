@@ -24,7 +24,7 @@ router.get("/:id",async(req,res)=>{
     .select('+content').populate("categories")
     res.send(data)
 })
-
+// 新建文章接口
 router.post("/new",async(req,res)=>{
     const body = {author:req.user._id,...req.body}
     const result = await Article.insertMany(body)
@@ -33,7 +33,6 @@ router.post("/new",async(req,res)=>{
 })
 
 // 评论接口
-// 新增评论
 router.put('/comments/:id',async(req,res)=>{
     assert(req.user,401,"请先登录！")
     if(req.body.comment_id){
@@ -59,14 +58,27 @@ router.put('/comments/:id',async(req,res)=>{
     .populate('comments.communicates.resp_user'))
 
 })
-
-router.put('/:id',async(req,res)=>{
-    const result = await Article.updateOne({_id:req.params.id,author:req.user._id},req.body)
+// 删除文章接口
+router.delete('/:id',async(req,res)=>{
+    const result = await Article.deleteOne({_id:req.params.id,author:req.user._id})
+    res.send(result)
+})
+//点赞接口
+router.put('/support/:id',async(req,res)=>{
+    assert(req.user,422,'请先登录')
+    let result = await Article.findOne({_id:req.params.id})
+    assert(result.author.toString() != req.user._id,422,'不能给自己点赞')
+    const supported = result.supporters.map(e=>e.user.toString()).includes(req.user._id)
+    assert(!supported,422,"您已赞过该文章")
+    result = await Article.update({_id:req.params.id},{$push:{
+        'supporters':{user:req.user._id}
+    }})
     res.send(result)
 })
 
-router.delete('/:id',async(req,res)=>{
-    const result = await Article.deleteOne({_id:req.params.id,author:req.user._id})
+// 更新文章
+router.put('/:id',async(req,res)=>{
+    const result = await Article.updateOne({_id:req.params.id,author:req.user._id},req.body)
     res.send(result)
 })
 

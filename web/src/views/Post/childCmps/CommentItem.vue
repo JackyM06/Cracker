@@ -8,12 +8,12 @@
                 {{comment.content}}</p>
             <div class="text-grey-light d-flex mb-2">
                 <span class="text-grey-light flex-1">{{comment.createDate | date(comment.createDate+1)}}</span>
-                <div class="mr-lg-5 mr-3">
+                <!-- <div class="mr-lg-5 mr-3">
                     <svg class="icon cursor-point btnHover" aria-hidden="true">
                         <use xlink:href="#icon-zan1"></use>
                     </svg>
                     <span v-show="comment.assist_count>0" class="pl-1">{{comment.assist_count}}</span>
-                </div>
+                </div> -->
                 <div class="cursor-point btnHover" @click.stop="isShow = !isShow">
                     <svg class="icon" aria-hidden="true">
                         <use xlink:href="#icon-huifu1"></use>

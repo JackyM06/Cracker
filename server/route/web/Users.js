@@ -75,7 +75,6 @@ router.put('/field',async(req,res)=>{
 router.put('/restpassword',async(req,res)=>{
     // 验证原密码
     const user = await User.findOne({_id:req.body.user_id}).select('+password')
-    console.log(user)
     const isValid = require('bcryptjs').compareSync(req.body.oldPassword,user.password)
     assert(isValid,422,"密码错误")
     // 检查新密码

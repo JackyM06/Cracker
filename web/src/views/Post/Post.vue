@@ -3,7 +3,7 @@
         <div class="row mt-0 mt-md-2">
             <div class="col-12 col-lg-9 px-0">
                 <div class="card-s bg-white  p-2 p-lg-3">
-                    <post-main class="PostMain" :article = 'Article'></post-main>
+                    <post-main @Supported="fetchArticle()" class="PostMain" :article = 'Article'></post-main>
                 </div>
                 <!-- 评论 -->
                 <div class="card-s mb-2 bg-white mt-2">

@@ -24,6 +24,6 @@ const routes = [
     },
     { path: '/editor/new', component: ()=>import('views/Editor/Editor.vue')},
     { path: '/editor/:id', component: ()=>import('views/Editor/Editor.vue'),props:true},
-    { path: '/login', component: ()=>import('views/Login/Login.vue')},
+    { path: '/about', component: ()=>import('views/About/About.vue')},
 ]
 export default routes

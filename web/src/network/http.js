@@ -1,6 +1,7 @@
 import Axios from 'axios'
 import Vue from 'vue'
-import router from '../router'
+// import router from '../router'
+import store from '../store'
 
 let http = Axios.create({
     baseURL:process.env.VUE_APP_API_URL || '/web/api/v1'
@@ -12,7 +13,8 @@ http.interceptors.response.use(res=>{
     const message = err.response.data.message
     Vue.prototype.$message.error(message)
     if(err.response.status == 401){
-        router.push('/')
+        // router.go(-1)
+        store.commit('openLoginShow')
     }
     return Promise.reject(err)
 })

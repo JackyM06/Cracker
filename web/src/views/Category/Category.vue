@@ -15,7 +15,7 @@
     import CategoryItem from './childCmps/CategoryItem.vue'
 
     export default {
-        name:'category',
+        name:'Category',
         data () {
             return {
                 categories:[],

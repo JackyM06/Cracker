@@ -10,8 +10,9 @@
                 <under-line></under-line>
             </div>
             <div class="d-none d-lg-block col-lg-3  pl-2">
-                <div class="rightCmps">
-                    <login-card class="bg-white card-s"></login-card>  
+                <login-card class="bg-white card-s"></login-card>  
+                <div class="rightCmps">             
+                    <Remmber></Remmber>
                     <carcker-info class="p-2 "></carcker-info>  
                 </div>
             </div>
@@ -24,10 +25,11 @@
     import UnderLine from 'components/content/UnderLine/UnderLine.vue'
     import LoginCard from 'components/content/Card/LoginCard.vue'
     import CarckerInfo from 'components/content/Card/CarckerInfo.vue'
-    
+    import Remmber from './childCmps.vue/Remmber.vue'
+
     import {ArticleInfo} from 'network/module.js'
     export default {
-        name:"Home",
+        name:"Hot",
         data(){
             return{
                 page:0,
@@ -39,7 +41,8 @@
             ArticleItem,
             UnderLine,
             LoginCard,
-            CarckerInfo
+            CarckerInfo,
+            Remmber
         },
         methods:{
             async fetchArticleList(){

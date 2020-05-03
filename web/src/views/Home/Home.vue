@@ -7,8 +7,9 @@
                 :article-info="item"></article-item>
             </div>
             <div class="d-none d-lg-block col-lg-3  pl-2">
-                <div class="rightCmps">
-                    <login-card class="bg-white card-s"></login-card>  
+                <login-card class="bg-white card-s"></login-card>  
+                <div class="rightCmps">             
+                    <Remmber></Remmber>
                     <carcker-info class="p-2 "></carcker-info>  
                 </div>
             </div>
@@ -21,6 +22,8 @@
     import LoginCard from 'components/content/Card/LoginCard.vue'
     import CarckerInfo from 'components/content/Card/CarckerInfo.vue'
     
+    import Remmber from './childCmps.vue/Remmber.vue'
+
     import {ArticleInfo} from 'network/module.js'
 
     export default {
@@ -35,7 +38,8 @@
         components:{
             ArticleItem,
             LoginCard,
-            CarckerInfo
+            CarckerInfo,
+            Remmber,
         },
         methods:{
             async fetchArticleList(){

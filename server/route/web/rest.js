@@ -39,12 +39,17 @@ router.get('/:id',async(req,res)=>{
     .populate('comments.communicates.resp_user').lean()
     
     if(req.user){
+        
         if(req.user._id.toString() == data._id.toString()){
             data.canEdit = true
         }else if( data.author && data.author._id.toString() == req.user._id.toString() ){
             data.canEdit = true
         }else{
             data.canEdit = false
+        }
+
+        if(req.ModelName == 'Article' && data.author._id.toString() != req.user._id.toString()){
+            await req.Model.updateOne({_id:data._id},{visits:data.visits+1})
         }
     }else{
         data.canEdit = false

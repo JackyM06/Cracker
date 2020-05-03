@@ -23,9 +23,9 @@
                 <div class="py-1 px-3 flex-1 nav-item">
                     <router-link tag="button" class="bg-red btn cursor-point" to="/editor/new">写文章</router-link>
                 </div>
-                <div v-if="Object.keys(user).length == 0" class="py-1">
-                    <button class="nav-item btn bg-grey cursor-point" @click="LoginShow=true">登录</button>
-                    <button class="nav-item btn bg-black ml-2 cursor-point" @click="RegisterShow=true">加入</button>
+                <div v-if="!$store.state.Logged" class="py-1">
+                    <button class="nav-item btn bg-grey cursor-point" @click="openLoginShow()">登录</button>
+                    <button class="nav-item btn bg-black ml-2 cursor-point" @click="openRegisterShow()">加入</button>
                 </div>
                 <avatar @LoginOut="LoginOut"  v-else :user = 'user'></avatar>
             </div>
@@ -61,18 +61,18 @@
                             <li class="nav-item"><a href="/categories" class="nav-link">分类</a></li>
                             <li class="nav-item"><a href="/hot" class="nav-link">热榜</a></li>
                             <li class="nav-item"><a href="/editor/new" class="nav-link">写文章</a></li>
-                            <li v-if="Object.keys(user).length == 0" class="nav-item"><a @click="LoginShow=true" class="nav-link cursor-point">登录</a></li>
-                            <li v-if="Object.keys(user).length == 0" class="nav-item"><a @click="RegisterShow=true" class="nav-link cursor-point">注册</a></li>
-                            <li v-if="!Object.keys(user).length == 0" class="nav-item"><a :href="`/profile/${user._id}`" class="nav-link">我的主页</a></li>
-                            <li v-if="!Object.keys(user).length == 0" class="nav-item"><a @click="LoginOut" class="nav-link cursor-point">登出</a></li>
+                            <li v-if="!$store.state.Logged" class="nav-item"><a @click="openLoginShow()" class="nav-link cursor-point">登录</a></li>
+                            <li v-if="!$store.state.Logged" class="nav-item"><a @click="openRegisterShow()" class="nav-link cursor-point">注册</a></li>
+                            <li v-if="$store.state.Logged" class="nav-item"><a :href="`/profile/${user._id}`" class="nav-link">我的主页</a></li>
+                            <li v-if="$store.state.Logged" class="nav-item"><a @click="LoginOut" class="nav-link cursor-point">登出</a></li>
                         </ul>
                     </div>
                 </nav>
             </div>
         </div>
 
-        <login :is-show="LoginShow" @LoginSuccess="fetchUser"  @close="closeLogin()" @goRegister="goRegister()"></login>
-        <Register :is-show="RegisterShow" @RegisterSuccess="fetchUser" @close="closeRegister()" @goLogin="goLogin()"></Register>
+        <login  @LoginSuccess="fetchUser"></login>
+        <Register @RegisterSuccess="fetchUser"></Register>
     </div>
 </template>
 
@@ -108,19 +108,11 @@
                 const res = await this.$http.get('users/nomust/info')
                 this.user = res.data
             },
-            closeLogin(){
-                this.LoginShow = false
+            openLoginShow(){
+                this.$store.commit('openLoginShow')
             },
-            closeRegister(){
-                this.RegisterShow = false
-            },
-            goRegister(){
-                this.closeLogin()
-                this.RegisterShow = true
-            },
-            goLogin(){
-                this.closeRegister()
-                this.LoginShow = true
+            openRegisterShow(){
+                this.$store.commit('openRegisterShow')
             },
             LoginOut(){
                 this.$MessageBox.confirm('是否退出当前账号?', '提示', {
@@ -133,6 +125,7 @@
                   });
                   localStorage.clear()
                   this.user = {}
+                  this.$store.commit('LoginOut')
                   this.$router.replace('/')
                 }).catch(() => {
                   this.$message({

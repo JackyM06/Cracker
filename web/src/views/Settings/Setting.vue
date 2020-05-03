@@ -38,6 +38,11 @@
         },
         created(){
             this.fetchUser()
+        },
+        beforeRouteEnter(to, from, next){
+            next(vm=>{
+                if(!vm.$store.state.Logged) vm.$router.go(-1)
+            })
         }
     }
 </script>
