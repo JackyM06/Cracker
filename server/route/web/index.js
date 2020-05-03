@@ -20,7 +20,7 @@ module.exports = app => {
     // 图片上传
     const multer = require('multer')
     const upload = multer({ dest: __dirname + '../../../uploads' })
-    app.post('/web/api/v1/upload',upload.single('file'),async(req,res)=>{
+    app.post('/web/api/v1/upload',userAuthMiddle(),upload.single('file'),async(req,res)=>{
         const file = req.file
         file.url = `http://localhost:3000/uploads/${file.filename}`
         res.send(file)

@@ -5,6 +5,7 @@
                 <div slot="body" class="d-flex align-items-end">
                     <img  :src="user.avatar" alt="" style="width:72px;height:72px"> 
                     <el-upload
+                        :headers="authHeader"
                         :show-file-list="false"
                         :action="`${$http.defaults.baseURL}/upload`"
                         :on-success="handleAvatarSuccess"

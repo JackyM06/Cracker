@@ -57,6 +57,11 @@ Vue.mixin({
           },delay)
       }
     },
+  },
+  computed: {
+    authHeader(){
+      return  {Authorization:'Bearer '+localStorage.token}
+    }
   }
 })
 

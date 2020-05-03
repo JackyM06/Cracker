@@ -19,5 +19,10 @@ module.exports={
               })
         ]
     },
-    devServer: { port: 8083} //设置端口
+    devServer: { port: 8083}, //设置端口
+    publicPath:process.env.NODE_ENV === 'production'
+    ? '/'
+    : '/',
+
+    outputDir:__dirname+'/../server/web',
 }

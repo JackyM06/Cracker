@@ -105,7 +105,7 @@
                 }
             },
             async fetchUser(){
-                const res = await this.$http.get('users/nomust/info')
+                const res = await this.$http.get('users/info')
                 this.user = res.data
             },
             openLoginShow(){
