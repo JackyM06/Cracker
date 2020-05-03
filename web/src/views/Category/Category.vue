@@ -2,7 +2,8 @@
     <div>
         <h3 class="bg-white-gray text-center py-3 py-md-5 text-gray-sl font-weight" >分类</h3>
         <div class="container bg-white box-s my-0">
-            <div class="row py-3">
+            <no-more class="row" v-if="categories.length == 0"></no-more>
+            <div v-else class="row py-3">
                 <category-item v-for="(item,key) in categories" :key="key"
                 :category="item"
                 ></category-item>
@@ -13,7 +14,7 @@
 
 <script>
     import CategoryItem from './childCmps/CategoryItem.vue'
-
+    import NoMore from 'components/content/NoMore/NoMore.vue'
     export default {
         name:'Category',
         data () {
@@ -23,7 +24,8 @@
             }
         },
         components:{
-            CategoryItem
+            CategoryItem,
+            NoMore
         },
         methods:{
             async fetchCategories(){

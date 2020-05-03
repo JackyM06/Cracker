@@ -2,13 +2,17 @@
     <div class="container">
         <div class="row mt-2">
             <div class="col-0 col-lg-2 "></div>
-            <card class=" bg-white col-12 col-lg-8 px-0" title="草稿箱">
+            <card class=" bg-white col-12 col-lg-8 px-0" title="草稿箱" v-if="infoList.length == 0">
+                <no-more slot="body"></no-more>
+            </card>
+            <card v-else class=" bg-white col-12 col-lg-8 px-0" title="草稿箱">
                 <div slot="body">
                     <draft-item class="border-b" v-for="(item,key) in infoList" 
                     :draft="item" :key="key" @deleteSuc="deleteDraft(key)"></draft-item>
                 </div>
                 <under-line slot="foot"></under-line>
             </card>
+
         </div>
     </div>
 </template>
@@ -16,6 +20,7 @@
 <script>
     import Card from 'components/content/Card/Card.vue'
     import UnderLine from 'components/content/UnderLine/UnderLine.vue'
+    import NoMore from 'components/content/NoMore/NoMore.vue'
 
     import DraftItem from './childCpms/DraftItem.vue'
 
@@ -29,7 +34,8 @@
         components:{
             Card,
             UnderLine,
-            DraftItem
+            DraftItem,
+            NoMore
         },
         methods:{
             async fetchDraftsList(){

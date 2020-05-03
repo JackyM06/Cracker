@@ -22,7 +22,8 @@
                             class="cursor-point">最热</span>
                         </div>
                     </div>
-                    <div class="box-s bg-white">
+                    <no-more class="box-s bg-white" v-if="infoList.length == 0"></no-more>
+                    <div v-else class="box-s bg-white">
                         <article-item 
                         v-for="(item,key) in infoList" :key="key"
                         :article-info="item"></article-item>
@@ -38,6 +39,9 @@
     import ArticleItem from 'components/content/ArticleItem/ArticleItem.vue'
     import UnderLine from 'components/content/UnderLine/UnderLine.vue'
     import CateWatch from 'components/content/Watched//CateWatch.vue'
+
+    import NoMore from 'components/content/NoMore/NoMore.vue'
+    
     import {ArticleInfo} from 'network/module.js'
 
     export default {
@@ -83,7 +87,8 @@
         components:{
             ArticleItem,
             UnderLine,
-            CateWatch
+            CateWatch,
+            NoMore
         },
         created(){
             this.fetchInfoList()

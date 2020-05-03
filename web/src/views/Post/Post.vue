@@ -60,7 +60,7 @@
             async fetchArticle(){
                 const res = await this.$http.get(`/rest/articles/${this.id}`)
                 this.Article = res.data
-                this.categories = res.data.categories.map(e=>e._id)
+                if(res.data.categories)this.categories = res.data.categories.map(e=>e._id)
             },
             async fetchRecommend(){
                 const res = await this.$http.get(`/rest/articles/page`,{
@@ -91,7 +91,6 @@
                 const SH = document.body.scrollHeight //获取当前页面总长度
                 const ST = document.documentElement.scrollTop || document.body.scrollTop  //当前元素到页面顶部的距离
                 const CH = document.body.clientHeight //当前浏览器可视的高度
-                console.log(CH)
                 if(SH - Math.ceil(CH+ST) < 100){
                     this.fetchRecommend()
                 }
