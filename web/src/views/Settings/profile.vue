@@ -1,4 +1,4 @@
-<template>
+/jpg/png<template>
     <card title="个人资料">
         <div slot="body">
             <edit-item title="头像">
@@ -88,12 +88,17 @@
                 this.current = -1
             },
             beforeAvatarUpload(file){
-                const isJPG = file.type === 'image/jpeg';
-                const isLt2M = file.size / 1024 < 500;
+                const isJPG = 
+                file.type === 'image/jpeg' ||
+                file.type === 'image/png' ||
+                file.type === 'image/jpg'
+
+                const isLt2M = file.size / 1024 < 500
+                
                 if (!isJPG) {
-                  this.$message.error('上传头像图片只能是 JPG/PNG 格式!');
+                  this.$message.error('上传头像图片只能是 JPG/PNG 格式!')
                 }else if (!isLt2M) {
-                  this.$message.error('上传头像图片大小不能超过 500KB!');
+                  this.$message.error('上传头像图片大小不能超过 500KB!')
                 }
                 return isJPG && isLt2M;
             },
