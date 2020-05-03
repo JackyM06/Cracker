@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const sechma = new mongoose.Schema({
     name:{type:String},
-    avatar:{type:String,default:'http://localhost:3000/uploads/placehorder.png'},
+    avatar:{type:String,default:'http://39.106.198.9/uploads/placehorder.png'},
     position:{type:String},
     company:{type:String},
     introduction:{type:String},

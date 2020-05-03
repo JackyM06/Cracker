@@ -204,11 +204,21 @@ module.exports = app=>{
     /**
      * 文件上传处理
      */
+
     const multer = require('multer')
-    const upload = multer({ dest: __dirname + '../../../uploads' })
+    const MAO = require('multer-aliyun-oss')
+    const upload = multer({
+        storage: MAO({
+            config: {
+                region: 'oss-cn-beijing',
+                accessKeyId: 'LTAI4FwZzQjt6eyvGbYjKAFR',
+                accessKeySecret: 'pEo9JZgc9pQTzxuALANmb7nM6mfLp1',
+                bucket: 'moba0613'
+            }
+        })
+    })
     app.post('/admin/api/v1/upload',authMiddle(),upload.single('file'),async(req,res)=>{
         const file = req.file
-        file.url = `http://localhost:3000/uploads/${file.filename}`
         res.send(file)
     })
 
