@@ -28,8 +28,8 @@ module.exports = app=>{
         if (regEmail.test(EMAIL)){
           const Code = require("../models/Code")
           const e_mail = EMAIL
-          const find = await Code.findOne({e_mail})
-          assert(!find,401,'当前邮箱验证码已发送，请稍后再试') 
+          // const find = await Code.findOne({e_mail})
+          // assert(!find,401,'当前邮箱验证码已发送，请稍后再试') 
           let code=randomFns()
           transport.sendMail({
             from: 'crackerlink@163.com', // 发件邮箱
@@ -45,6 +45,7 @@ module.exports = app=>{
             assert(!error,500,"发送验证码错误！")
             transport.close(); // 如果没用，关闭连接池
           })        
+          await Code.deleteMany({e_mail})
           const [data] = await Code.insertMany({e_mail,veri_code:code})
           setTimeout(async ()=>{    //5分钟后失效
               await Code.deleteMany({e_mail})
