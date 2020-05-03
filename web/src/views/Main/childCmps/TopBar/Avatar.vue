@@ -56,7 +56,6 @@
         },
         methods:{
             LoginOut(){
-                localStorage.clear()
                 this.$emit('LoginOut')
             }
         },

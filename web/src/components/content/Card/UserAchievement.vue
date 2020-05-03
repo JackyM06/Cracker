@@ -1,6 +1,6 @@
 <template>
-    <div v-if="user">
-        <card title="个人成就" class="card-s bg-white mt-2">
+    <div v-if="Object.keys(user).length>0">
+        <card title="作者成就" class="card-s bg-white">
             <div slot="body">
                 <div class="d-flex mb-2 align-items-center">
                     <svg class="icon text-red-light" aria-hidden="true">
@@ -25,28 +25,6 @@
                 </div>
             </div>
         </card>
-        <div class="card-s bg-white p-3 d-flex">
-            <div @click="$emit('currentChange',1)"
-            class="d-flex flex-column align-items-center flex-1 cursor-point">
-                <span>关注了</span>
-                <span class="font-weight fs-xl" v-text="user.followers.length"></span>
-            </div>
-            <div @click="$emit('currentChange',2)" 
-            class="d-flex flex-column align-items-center flex-1 cursor-point">
-                <span>关注者</span>
-                <span class="font-weight fs-xl" v-text="user.fans.length"></span>
-            </div>
-        </div>
-        <div class="card-s bg-white mt-2 p-3">
-            <div @click="$emit('currentChange',3)" class="d-flex justify-content-between cursor-point  border-b pb-1 mb-1">
-                <span>关注分类</span>
-                <span>{{user.categories?user.categories.length:0}}</span>
-            </div>
-            <div class="d-flex justify-content-between">
-                <span>加入于</span>
-                <span>{{user.createdAt | date(null,'YYYY年MM月DD日')}}</span>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -79,8 +57,10 @@
                 this.articlesCount = res.data.articlesCount
             }
         },
-        mounted(){
-            this.fetchAchievement()
+        updated(){
+            if(this.user._id){
+                this.fetchAchievement()
+            }
         }
     }
 </script>

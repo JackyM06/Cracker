@@ -21,12 +21,9 @@
                     <under-line></under-line>
                 </div>
             </div>
-            <div class="Right d-none d-lg-block col-lg-3  pl-2">
-                <div class="bg-white rightCmps card-s p-5 mb-2">
-                    <span>测试3</span>
-                    <span>测试</span>
-                    <span>测试</span>
-                </div>
+            <div class="Right d-none d-lg-block col-lg-3  pl-2 p-0">
+                <user-achievement class="rightCmps" :user="Article.author">
+                </user-achievement>
             </div>
         </div>
     </div>
@@ -36,6 +33,7 @@
 
     import ArticleItem from 'components/content/ArticleItem/ArticleItem.vue'
     import UnderLine from 'components/content/UnderLine/UnderLine.vue'
+    import UserAchievement from '../../components/content/Card/UserAchievement.vue'
 
     import PostMain from './childCmps/PostMain.vue'
     import CommentsMain from './childCmps/CommentsMain.vue'
@@ -83,7 +81,8 @@
             PostMain,
             ArticleItem,
             CommentsMain,
-            UnderLine
+            UnderLine,
+            UserAchievement
         },
         async created(){
             await this.fetchArticle()

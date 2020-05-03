@@ -28,6 +28,11 @@
                     isWatched:this.isWatched
                 }) 
                 this.isWatched = res.data.isWatched
+                if(this.isWatched){
+                    this.$message.success("已关注该用户")
+                }else{
+                    this.$message.warning("已取关该用户")
+                }
             }
         },
         created(){

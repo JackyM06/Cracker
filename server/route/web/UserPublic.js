@@ -65,7 +65,10 @@ router.get('/achievement/:id',async(req,res)=>{
 })
 
 router.get('/info',async(req,res)=>{
-    const data = await User.findById(req.user._id).populate('categories')
+    let data
+    if (req.user){
+        data = await User.findById(req.user._id).populate('categories')
+    }
     res.send(data)
 })
 

@@ -66,10 +66,10 @@
                 if(isSel)target.select()
             },
             async saveField(key){
-                const res = this.$http.put('users/field',{
+                await this.$http.put('users/field',{
                     [key]:this.user[key]
                 })
-                console.log(res)
+                this.$message.success("修改成功")
                 this.current = -1
             },
             cancelEdit(key){

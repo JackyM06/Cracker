@@ -2,6 +2,7 @@
 class ArticleInfo {
     constructor(value){
         this.message = {
+            _id:value.author._id,
             auth:value.author.name,
             createdAt:value.createdAt,
             categories:value.categories.map(category=>category.name).join('/')

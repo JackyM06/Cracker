@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="bg-light p-1 d-flex">
+        <div class=" p-1 d-flex py-2">
         <input ref="ComInput" v-model="content" class="input flex-1 px-2 py-1 border-radius"
              type="text" maxlength="80" :placeholder="`回复${user}`"
              @show="console.log('tet')"

@@ -90,7 +90,8 @@
                     subfield: true, // 单双栏模式
                     preview: true, // 预览
                 },
-                user:{}
+                user:{},
+                published:false
                
             }
         },
@@ -145,9 +146,15 @@
                 this.editorChange()
             },
             Public(){ //发布文章
-                this.Article.type = 'public'
-                this.autoSave()
-                this.$router.push('/')
+                if(this.Article.categories.length>0){
+                    this.Article.type = 'public'
+                    this.autoSave()
+                    this.published = true
+                    this.$router.push('/')
+                    this.$message.success("发布成功！")
+                }else{
+                    this.$message.warning("请至少选择一个分类")
+                }
             },
             async fetchUser(){
                 const res = await this.$http.get('users/info')
@@ -170,6 +177,20 @@
                     }
                 }
             })
+        },
+        beforeRouteLeave(to, from, next){
+            // 判断是否保存当前文章，并确定是否为发布链接跳转
+            if(!this.published && this.message != '已自动保存至'){
+                this.$MessageBox.confirm('当前编辑器存在未保存内容，是否退出编辑？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                }).then(() => {
+                    next()
+                })
+            }else{
+                next()
+            }
+            
         }
     }
 </script>

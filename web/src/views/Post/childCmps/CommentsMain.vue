@@ -1,8 +1,8 @@
 <template>
     <div>
-        <comment-input @commit = "CommentCom"></comment-input>
+        <comment-input class="bg-white" @commit = "CommentCom"></comment-input>
         <div class="border-b" v-for="(item,key) in Comments" :key="key">
-            <comment-item :comment="item" :id="id" :comment-id = "item._id" @commitCom="commitResp">
+            <comment-item class="bg-light" :comment="item" :id="id" :comment-id = "item._id" @commitCom="commitResp">
                 <div v-if="item.communicates.length>0"  class="bg-light p-1 mt-2" style="border-radius: 3px;">
                     <comment-item @commitCom="commitResp" :comment="response" :id="id" :comment-id = "item._id"
                     v-for="(response,res_key) in item.communicates" :key="res_key"
@@ -35,7 +35,7 @@
             },
             async commitResp(resp){
                 console.log(resp)
-                const res = await this.$http.put('/rest/articles/'+this.id,resp)
+                const res = await this.$http.put('articles/comments/'+this.id,resp)
                 this.$emit('editCom',res.data.comments)
             }
         }

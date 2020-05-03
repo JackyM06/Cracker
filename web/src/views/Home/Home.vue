@@ -7,22 +7,10 @@
                 :article-info="item"></article-item>
             </div>
             <div class="d-none d-lg-block col-lg-3  pl-2">
-                <div class="bg-white card-s p-5 mb-2">
-                    <span>测试1</span>
-                    <span>测试</span>
-                    <span>测试</span>
+                <div class="rightCmps">
+                    <login-card class="bg-white card-s"></login-card>  
+                    <carcker-info class="p-2 "></carcker-info>  
                 </div>
-                <div class="bg-white card-s  p-5 mb-2">
-                    <span>测试2</span>
-                    <span>测试</span>
-                    <span>测试</span>
-                </div>
-                <div class="bg-white rightCmps card-s p-5 mb-2">
-                    <span>测试3</span>
-                    <span>测试</span>
-                    <span>测试</span>
-                </div>
-                
             </div>
         </div>
     </div>
@@ -30,8 +18,11 @@
 
 <script>
     import ArticleItem from 'components/content/ArticleItem/ArticleItem.vue'
-
+    import LoginCard from 'components/content/Card/LoginCard.vue'
+    import CarckerInfo from 'components/content/Card/CarckerInfo.vue'
+    
     import {ArticleInfo} from 'network/module.js'
+
     export default {
         name:"Home",
         data(){
@@ -42,7 +33,9 @@
             }
         },
         components:{
-            ArticleItem
+            ArticleItem,
+            LoginCard,
+            CarckerInfo
         },
         methods:{
             async fetchArticleList(){

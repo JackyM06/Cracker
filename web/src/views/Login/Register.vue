@@ -8,7 +8,12 @@
                   <input type="email" v-model="e_mail" class="inputText mb-2" placeholder="请输入邮箱">
                   <div class="d-flex mb-2">
                       <input type="text" v-model="VeriCode" class="inputText flex-1 mr-4" maxlength="6" placeholder="邮箱验证码">
-                      <button class="followBtn fs-sm py-1 px-2" @click.prevent="getVeriCode">获取验证码</button>
+                      <button ref="getVeri" style="min-width:100px;font-size:.8rem"
+                       :class="{'followBtn':Interval == 0,'disEnable':Interval>0}"
+                       class="fs-sm py-1 px-1" @click.prevent="getVeriCode">
+                        <span v-if="Interval == 0">获取验证码</span>
+                        <span v-else>{{Interval}}s后重新获取</span>
+                      </button>
                   </div>
                   <input type="password" v-model="password" class="inputText mb-2" placeholder="请输入密码（不少于6位）">
                   <input type="submit" class="followedBtn w-100 py-1" value="注册">
@@ -33,7 +38,8 @@
           e_mail:"",
           name:"",
           password:"",
-          VeriCode:""
+          VeriCode:"",
+          Interval:0, //设置计时器倒计时
         }
       },
       methods:{
@@ -41,28 +47,58 @@
           this.e_mail = ""
           this.name = ""
           this.password = ""
-          this.VeriCode = ""
+          this.VeriCode = "",
           this.$emit('close')
         },
         goLogin(){
           this.$emit('goLogin')
         },
         async Register(){
-          const res = await this.$http.post('register/new',{
-            name:this.name,
-            e_mail:this.e_mail,
-            password:this.password,
-            veri_code:this.VeriCode
-          })
-          if(res.data.token){
-            localStorage.token = res.data.token
-            await this.$emit('RegisterSuccess')
-            this.close()
+          if(this.VeriForm()){
+            const res = await this.$http.post('register/new',{
+              name:this.name,
+              e_mail:this.e_mail,
+              password:this.password,
+              veri_code:this.VeriCode
+            })
+            if(res.data.token){
+              localStorage.token = res.data.token
+              await this.$emit('RegisterSuccess')
+              this.close()
+            }
           }
         },
         async getVeriCode(){
-          const res = this.$http.post('register/vericode',{e_mail:this.e_mail})
-          console.log(res.data)
+          const regEmail=/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/ 
+          if(regEmail.test(this.e_mail)){
+            await this.$http.post('register/vericode',{e_mail:this.e_mail})
+            this.$refs.getVeri.setAttribute("disabled", true)
+            this.Interval = 10
+            let timer = setInterval(()=>{
+              this.Interval--
+              if(this.Interval == 0){
+                this.$refs.getVeri.removeAttribute("disabled")
+                clearInterval(timer)
+              }
+            },1000)
+          }else{
+            this.$message.error("请输入正确的邮箱地址！")
+          }
+        },
+        VeriForm(){
+          if(this.name.length<2){
+            this.$message.error('请输入用户名（至少2个字符）')
+            return false
+          }
+          if(this.VeriCode.length!=6 || isNaN(parseInt(this.VeriCode))){
+            this.$message.error('请输入正确的验证码')
+            return false
+          }
+          if(this.password.length<6){
+            this.$message.error('请输入正确的密码')
+            return false
+          }
+          return true
         }
       },
       components:{
@@ -83,4 +119,11 @@
       color:#ccc;
     }
   }
+  .disEnable{
+    border:1px solid #ddd;
+    color:#ddd;
+    background: white;
+    border-radius: 3px;
+  }
+
 </style>

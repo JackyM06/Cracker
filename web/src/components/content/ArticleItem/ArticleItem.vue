@@ -4,7 +4,7 @@
             
             <div class="col-10"  :class="{'col-12':articleInfo.img==null}">
                 <div class="d-flex fs-xs text-grey-light">
-                    <span>{{articleInfo.message.auth}}·</span>
+                    <span @click="$router.push(`/profile/${articleInfo.message._id}`)" class="cursor-point">{{articleInfo.message.auth}}·</span>
                     <span>{{articleInfo.message.createdAt | date}}·</span>
                     <span>{{articleInfo.message.categories}}</span>
                 </div>
@@ -27,11 +27,11 @@
                         </svg>
                         <span class="ml-1 mr-3 fs-sm">{{articleInfo.comments}}条评论</span>
                     </div>
-                    <div>
+                    <div class="cursor-point" >
                         <svg class="icon" aria-hidden="true">
                           <use xlink:href="#icon-fenxiang"></use>
                         </svg>
-                        <span class="ml-1 mr-3 fs-sm">分享</span>
+                        <span v-clipboard:copy="url" v-clipboard:success="cpySuccess" class="ml-1 mr-3 fs-sm">分享</span>
                     </div>
                 </div>
             </div>
@@ -49,11 +49,19 @@
                 type:Object
             }
         },
+        data () {
+            return {
+                url:"http://localhost:8083/post/"+this.articleInfo.articleId   
+            }
+        },
         methods:{
             // 点击标题后改变标题颜色，并完成跳转
             clickTitle(el){
                 el.target.style.color = "#909090"
                 this.$router.push(`/post/${this.articleInfo.articleId}`)
+            },
+            cpySuccess(){
+                this.$message.success("链接已复制到剪贴板")
             }
         }
     }

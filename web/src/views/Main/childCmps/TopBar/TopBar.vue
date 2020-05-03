@@ -123,9 +123,25 @@
                 this.LoginShow = true
             },
             LoginOut(){
-                localStorage.clear()
-                this.user = {}
-                this.$router.replace('/')
+                this.$MessageBox.confirm('是否退出当前账号?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                }).then(() => {
+                    this.$message({
+                    type: 'success',
+                    message: '已登出!'
+                  });
+                  localStorage.clear()
+                  this.user = {}
+                  this.$router.replace('/')
+                }).catch(() => {
+                  this.$message({
+                    type: 'info',
+                    message: '已取消！'
+                  });          
+                });
+
+                
             }
         },
         created(){

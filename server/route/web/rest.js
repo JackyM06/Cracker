@@ -53,30 +53,5 @@ router.get('/:id',async(req,res)=>{
     res.send(data)
 })
 
-// 评论接口
-// 新增评论
-router.put('/:id',async(req,res)=>{
-    if(req.body.comment_id){
-        await req.Model.update({_id:req.params.id,"comments._id":req.body.comment_id},
-            {
-                $addToSet:{
-                    "comments.$.communicates":{
-                        user:'5e6c8193ee0d280fc02505c6',
-                        resp_user:req.body.resp_user,
-                        content:req.body.content
-                    }
-                }
-            })
-    }else{
-        await req.Model.update({_id:req.params.id},{$push:{'comments':{
-            user:'5e6c8193ee0d280fc02505c6',
-            content:req.body.content
-        }}})
-    }
-    res.send(await req.Model.findOne({_id:req.params.id},{comments:1}).
-    populate('comments.user')
-    .populate('comments.communicates.user')
-    .populate('comments.communicates.resp_user'))
-})
 
 module.exports = router
