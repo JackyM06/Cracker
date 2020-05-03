@@ -39,14 +39,20 @@
         methods:{
             async Save(){
                 if(this.oldPassword.length<6){
-                    alert("请输入正确的原密码")
+                    this.$message.error("请输入正确的原密码")
                 }else if(this.newPassword.length<6){
-                    alert("密码长度不能小于6位")
+                    this.$message.error("密码长度不能小于6位")
                 }else if(this.newPassword != this.newPasswordCpy){
-                    alert("两次输入的密码不一致")
+                    this.$message.error("两次输入的密码不一致")
                 }else{
-                    // 修改密码
-                    alert("修改完成")
+                    const res = await this.$http.put('users/restpassword',{
+                        user_id:this.user._id,
+                        oldPassword:this.oldPassword,
+                        newPassword:this.newPassword
+                    })
+                    if(res.data.message){
+                        this.$message.sucess("修改完成,下次登录请使用新密码")
+                    }
                 }
             }
         }

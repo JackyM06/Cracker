@@ -19,6 +19,7 @@ module.exports = (app)=>{
             const vire = await Code.findOne({e_mail,veri_code})
             assert(vire,422,'验证码出错')
             //插入新用户
+            assert(password.length>=6,422,'密码至少6位')
             req.user = await User.insertMany({e_mail,name,password})
             req.user = req.user[0]
             // 返回Token
