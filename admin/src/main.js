@@ -13,6 +13,7 @@ import "echarts/lib/component/legend";
 import "echarts/lib/component/title";
 Vue.component('chart', ECharts)
 Vue.prototype.$echarts = echarts
+
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 Vue.component('mavonEditor',mavonEditor)

@@ -15,6 +15,7 @@ module.exports = app=>{
             }
             datalog.supporters += e.supporters.length
         })
+        // 统计访问量TOP10的分类
         const categories_visits = await require('../models/Category').aggregate([
             {
                 $lookup:{
@@ -32,7 +33,6 @@ module.exports = app=>{
             {$sort:{visits:-1}},
         ])
         datalog.categories = categories_visits
-        console.log(datalog)
         await require('../models/DataLog').insertMany(datalog)
         console.log(require('dayjs')().format('MM-DD hh:mm:ss')+"前日日志已已保存完成")
     },null, true)
